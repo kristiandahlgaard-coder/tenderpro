@@ -1,13 +1,18 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, provide, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from './stores/auth.js'
 import AppSidebar from './components/AppSidebar.vue'
+import AiAssistent from './components/AiAssistent.vue'
 
 const route = useRoute()
 const auth = useAuthStore()
 
 const showSidebar = computed(() => route.name !== 'login' && auth.isLoggedIn)
+
+// KI-Assistent Kontext — Views können diesen setzen
+const aiContext = ref({})
+provide('setAiContext', (ctx) => { aiContext.value = ctx })
 </script>
 
 <template>
@@ -16,6 +21,9 @@ const showSidebar = computed(() => route.name !== 'login' && auth.isLoggedIn)
     <main class="main-content">
       <router-view />
     </main>
+
+    <!-- KI-Assistent (global) -->
+    <AiAssistent v-if="showSidebar" :context="aiContext" />
   </div>
 </template>
 

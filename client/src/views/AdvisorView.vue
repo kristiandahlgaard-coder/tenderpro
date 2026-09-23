@@ -1,9 +1,10 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, inject, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '../api/index.js'
 
 const router = useRouter()
+const setAiContext = inject('setAiContext', () => {})
 const saving = ref(false)
 const error = ref('')
 
@@ -96,6 +97,18 @@ function nextStep() {
 function prevStep() {
   if (currentStep.value > 1) currentStep.value--
 }
+
+// ─── KI-Kontext aktualisieren ───────────────────────
+watch([currentStep, form, schwellenwertInfo], () => {
+  setAiContext({
+    view: 'advisor',
+    step: currentStep.value,
+    formData: { ...form.value },
+    schwellenwertInfo: schwellenwertInfo.value,
+  })
+}, { immediate: true, deep: true })
+
+onUnmounted(() => setAiContext({}))
 
 const canProceed = computed(() => {
   switch (currentStep.value) {
