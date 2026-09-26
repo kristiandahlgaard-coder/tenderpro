@@ -2,6 +2,7 @@
 import { ref, computed, watch, inject, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '../api/index.js'
+import OptionenPanel from '../components/OptionenPanel.vue'
 
 const router = useRouter()
 const setAiContext = inject('setAiContext', () => {})
@@ -54,27 +55,55 @@ watch(() => form.value.leistungsbeschreibung, (text) => {
   }
 })
 
-// ─── Schwellenwert-Berechnung ────────────────────
-const schwellen = {
-  'Bauleistung': 5538000,
-  'Lieferleistung': 221000,
-  'Dienstleistung': 221000,
-  'Freiberufliche Leistung': 221000,
-  'Konzession': 5538000,
+// ─── Optionskatalog & Schwellenwert (aus dem Backend) ─
+// Schwellenwerte und Landes-Wertgrenzen werden zentral in server/wissen/rechtsstand.json gepflegt.
+const merkmale = ref({})
+const optionen = ref(null)
+const optionenLaden = ref(false)
+let optionenTimer = null
+
+async function ladeOptionen() {
+  const vol = parseFloat(form.value.volumen_netto)
+  const art = form.value.leistungsart
+  if (!vol || !art) { optionen.value = null; return }
+  optionenLaden.value = true
+  try {
+    const { data } = await api.get('/optionen', {
+      params: { leistungsart: art, volumen: vol, merkmale: JSON.stringify(merkmale.value) },
+    })
+    optionen.value = data
+  } catch (err) {
+    console.error('Optionskatalog nicht erreichbar', err)
+    optionen.value = null
+  } finally {
+    optionenLaden.value = false
+  }
 }
+
+watch(
+  () => [form.value.leistungsart, form.value.volumen_netto, merkmale.value],
+  () => {
+    clearTimeout(optionenTimer)
+    optionenTimer = setTimeout(ladeOptionen, 350)
+  },
+  { deep: true }
+)
 
 const schwellenwertInfo = computed(() => {
   const vol = parseFloat(form.value.volumen_netto)
-  const art = form.value.leistungsart
-  if (!vol || !art) return null
-
-  const schwelle = schwellen[art] || 221000
-  const pct = (vol / schwelle * 100).toFixed(0)
-
-  if (vol <= 15000) return { type: 'success', regime: 'direkt', label: 'Direktvergabe möglich', text: `Volumen € ${vol.toLocaleString('de-DE')} liegt unter € 15.000 — Direktauftrag zulässig (UVgO § 14).`, verfahren: 'Direktvergabe' }
-  if (vol <= 25000) return { type: 'warning', regime: 'national', label: '3 Angebote erforderlich', text: `Volumen € ${vol.toLocaleString('de-DE')} liegt zwischen € 15.000 und € 25.000. Mindestens 3 Angebote einholen.`, verfahren: 'Verhandlungsvergabe' }
-  if (vol < schwelle) return { type: 'info', regime: 'national', label: 'Nationale Vergabe', text: `Volumen € ${vol.toLocaleString('de-DE')} unter EU-Schwellenwert (€ ${schwelle.toLocaleString('de-DE')}).${parseInt(pct) >= 85 ? ' ⚠️ Schwellenwert-Nähe: ' + pct + '%!' : ''}`, verfahren: 'Öffentliche Ausschreibung' }
-  return { type: 'danger', regime: 'eu', label: 'EU-weite Vergabe', text: `Volumen € ${vol.toLocaleString('de-DE')} überschreitet EU-Schwellenwert (€ ${schwelle.toLocaleString('de-DE')}). Offenes Verfahren nach VgV mit TED-Bekanntmachung.`, verfahren: 'Offenes Verfahren (VgV)' }
+  const o = optionen.value
+  if (!vol || !o) return null
+  const volText = `€ ${vol.toLocaleString('de-DE')}`
+  const schwelleText = `€ ${Number(o.schwelle).toLocaleString('de-DE')}`
+  const verfahren = o.empfohlenesVerfahren?.titel || null
+  if (o.regime === 'direkt') {
+    return { type: 'success', regime: 'direkt', label: 'Direktauftrag möglich', text: `Volumen ${volText} liegt unter der Direktauftragsgrenze (${o.landesPack?.name}).`, verfahren }
+  }
+  if (o.regime === 'eu') {
+    return { type: 'danger', regime: 'eu', label: 'EU-weite Vergabe', text: `Volumen ${volText} erreicht den EU-Schwellenwert (${schwelleText}).`, verfahren }
+  }
+  const pct = Math.round(vol / o.schwelle * 100)
+  return { type: 'info', regime: 'national', label: 'Nationale Vergabe', text: `Volumen ${volText} unter EU-Schwellenwert (${schwelleText}).${pct >= 85 ? ' ⚠️ Schwellenwertnähe: ' + pct + ' %' : ''}`, verfahren }
 })
 
 // ─── Steps ───────────────────────────────────────
@@ -99,16 +128,17 @@ function prevStep() {
 }
 
 // ─── KI-Kontext aktualisieren ───────────────────────
-watch([currentStep, form, schwellenwertInfo], () => {
+watch([currentStep, form, schwellenwertInfo, merkmale], () => {
   setAiContext({
     view: 'advisor',
     step: currentStep.value,
     formData: { ...form.value },
     schwellenwertInfo: schwellenwertInfo.value,
+    merkmale: { ...merkmale.value },
   })
 }, { immediate: true, deep: true })
 
-onUnmounted(() => setAiContext({}))
+onUnmounted(() => { setAiContext({}); clearTimeout(optionenTimer) })
 
 const canProceed = computed(() => {
   switch (currentStep.value) {
@@ -266,6 +296,15 @@ async function submitVergabe(asDraft = true) {
             <div class="info-box-verfahren">→ {{ schwellenwertInfo.verfahren }}</div>
           </div>
         </div>
+
+        <OptionenPanel
+          v-if="optionen"
+          :ergebnis="optionen"
+          v-model:merkmale="merkmale"
+          :nur-ids="['EP-01']"
+          mit-fragen
+          titel="Verfahrensart – Ihre Optionen"
+        />
       </div>
 
       <!-- Step 4: Struktur -->
@@ -299,6 +338,14 @@ async function submitVergabe(asDraft = true) {
             <input v-model="form.verlaengerung_optionen" class="form-input" placeholder="z.B. 2x 12 Monate" />
           </div>
         </div>
+      
+        <OptionenPanel
+          v-if="optionen"
+          :ergebnis="optionen"
+          v-model:merkmale="merkmale"
+          :ohne-ids="['EP-01']"
+          titel="Gestaltung der Vergabe – Ihre Optionen"
+        />
       </div>
 
       <!-- Step 5: Besonderheiten -->

@@ -1,0 +1,1027 @@
+{
+  "katalog": "optionskatalog-ldl",
+  "titel": "Optionskatalog Liefer- und Dienstleistungen",
+  "stand": "2026-09-26",
+  "rechtsstand": "GWB/VgV i.d.F. Vergabebeschleunigungsgesetz (in Kraft seit 01.07.2026, gilt für ab dann eingeleitete Verfahren, § 187 Abs. 2 GWB); UVgO 2017; AV LHO Berlin i.d.F. 18.09.2026",
+  "leistungsarten": [
+    "Lieferleistung",
+    "Dienstleistung"
+  ],
+  "priorisierung": "1. Rechtssicherheit, 2. Wirtschaftlichkeit, 3. Aufwand für die Vergabestelle",
+  "raenge": {
+    "1": "Empfohlen",
+    "2": "Alternative",
+    "3": "Möglich mit Risiko"
+  },
+  "sicherheitsgrade": {
+    "gruen": "gesichert (Gesetz oder gefestigte Rechtsprechung)",
+    "gelb": "Einzelentscheidung oder Sekundärquelle",
+    "rot": "offen oder umstritten"
+  },
+  "fragen": {
+    "standardisiert": "Lässt sich die Leistung eindeutig beschreiben, sodass sich die Angebote im Wesentlichen nur im Preis unterscheiden?",
+    "verhandlungsbedarf": "Muss die Lösung erst mit den Anbietern erarbeitet oder verhandelt werden (z.B. Konzept, Anpassung an Ihre Abläufe)?",
+    "dringlich": "Ist die Beschaffung wegen eines unvorhersehbaren Ereignisses, das Sie nicht verursacht haben, äußerst dringlich?",
+    "alleinstellung": "Kann nachweislich nur ein einziges Unternehmen liefern (technische Gründe, Schutzrechte)?",
+    "digital_innovation": "Handelt es sich um ein Digitalisierungs- oder Innovationsvorhaben der Verwaltung?",
+    "soziale_dl": "Gehört die Leistung zu den sozialen oder anderen besonderen Dienstleistungen (z.B. Gesundheits-, Sozial-, Bildungs-, Rechtsdienstleistungen)?",
+    "personalintensiv": "Ist die Leistung personalintensiv (z.B. Reinigung, Bewachung, Pflege, Catering)?",
+    "it": "Geht es um IT-Leistungen (Hardware, Software, Cloud, IT-Dienstleistungen)?",
+    "wiederkehrender_bedarf": "Entsteht der Bedarf wiederkehrend, ohne dass Mengen und Zeitpunkte heute feststehen?"
+  },
+  "entscheidungspunkte": [
+    {
+      "id": "EP-01",
+      "titel": "Verfahrensart",
+      "frage": "Welches Verfahren passt zu Auftragswert und Leistung?",
+      "optionen": [
+        {
+          "id": "EP-01-DA",
+          "titel": "Direktauftrag",
+          "rang": 1,
+          "kurz": "Unterhalb der Direktauftragsgrenze dürfen Sie ohne Vergabeverfahren beauftragen – schnell und rechtssicher, wenn Sie Preise vergleichen und den Anbieterkreis wechseln.",
+          "wenn": {
+            "regime": [
+              "national"
+            ],
+            "volumen_max_wg": "direktauftrag_ld"
+          },
+          "voraussetzungen": [
+            "Wirtschaftlichkeit und Sparsamkeit beachten",
+            "formlosen Preisvergleich durchführen und aktenkundig machen"
+          ],
+          "pflichten": [
+            "Wechselgebot: Anbieter wechseln, Ausnahmen begründen und dokumentieren",
+            "statistische Erfassung sicherstellen (Berlin)",
+            "Berlin ab 25.000 €: elektronisch über die Vergabeplattform Berlin oder den Digitalen Marktplatz Deutschland"
+          ],
+          "risiken": [
+            "Auftrag künstlich aufgeteilt, um unter der Grenze zu bleiben (unzulässig)"
+          ],
+          "rechtsgrundlage": "§ 14 UVgO; Landes-/Bundeswertgrenze (Berlin: AV LHO § 55 Nr. 3.3.3; Bund: § 55 Abs. 2 BHO)",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-01-DA-DIGI",
+          "titel": "Direktauftrag Digitalisierung/Innovation (Experimentierklausel)",
+          "rang": 1,
+          "kurz": "Für Digitalisierungs- und Innovationsvorhaben ist in Berlin ein Direktauftrag bis zur Sondergrenze zulässig – mit vorheriger Markterkundung.",
+          "wenn": {
+            "regime": [
+              "national"
+            ],
+            "flag": [
+              "digital_innovation"
+            ],
+            "volumen_min_wg": "direktauftrag_ld",
+            "volumen_max_wg": "direktauftrag_digital_innovation"
+          },
+          "voraussetzungen": [
+            "Vorhaben im Bereich Digitalisierung oder Innovation der Verwaltung (Innovationsbegriff nach Art. 2 Abs. 1 Nr. 22 RL 2014/24/EU)",
+            "Markterkundung durchführen",
+            "formloser Preisvergleich"
+          ],
+          "pflichten": [
+            "Markterkundung und Preisvergleich aktenkundig machen",
+            "Wechselgebot mit Dokumentation von Ausnahmen",
+            "statistische Erfassung"
+          ],
+          "risiken": [
+            "Befristet bis 31.12.2028",
+            "Einordnung als 'Innovation' muss nachvollziehbar begründet sein"
+          ],
+          "rechtsgrundlage": "AV LHO Berlin § 55 Nr. 3.3.4",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-01-SOZ",
+          "titel": "Verhandlungsverfahren mit TNW (soziale/besondere Dienstleistungen)",
+          "rang": 1,
+          "kurz": "Für soziale und andere besondere Dienstleistungen gilt eine höhere EU-Schwelle, und Sie dürfen ohne besonderen Grund verhandeln – meist der passende Weg, weil Qualität und Konzept im Vordergrund stehen.",
+          "wenn": {
+            "flag": [
+              "soziale_dl"
+            ],
+            "volumen_min_eu": "soziale_besondere_dl"
+          },
+          "voraussetzungen": [
+            "Leistung gehört zu Anhang XIV der RL 2014/24/EU",
+            "freie Wahl auch zwischen offenem und nicht offenem Verfahren, wettbewerblichem Dialog und Innovationspartnerschaft"
+          ],
+          "pflichten": [
+            "EU-Bekanntmachung",
+            "Zuordnung zu Anhang XIV im Vermerk begründen"
+          ],
+          "risiken": [
+            "Fehlerhafte Einordnung als besondere Dienstleistung"
+          ],
+          "rechtsgrundlage": "§ 130 Abs. 1 GWB; §§ 64–66 VgV",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-01-OA",
+          "titel": "Öffentliche Ausschreibung",
+          "rang": 1,
+          "rang_wenn": {
+            "verhandlungsbedarf": 2
+          },
+          "kurz": "Alle Unternehmen können anbieten – maximaler Wettbewerb und höchste Transparenz; der Standard für klar beschreibbare Leistungen.",
+          "wenn": {
+            "regime": [
+              "national"
+            ]
+          },
+          "voraussetzungen": [
+            "Leistung eindeutig beschreibbar"
+          ],
+          "pflichten": [
+            "Bekanntmachung",
+            "angemessene Angebotsfrist",
+            "keine Verhandlungen"
+          ],
+          "risiken": [
+            "Keine Verhandlung möglich – Fehler in der Leistungsbeschreibung schlagen voll durch"
+          ],
+          "rechtsgrundlage": "§ 8 Abs. 2, § 9 UVgO",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-01-VVO",
+          "titel": "Verhandlungsvergabe ohne Teilnahmewettbewerb",
+          "rang": 2,
+          "kurz": "Sie fordern gezielt mindestens drei Unternehmen zum Angebot auf und dürfen verhandeln – schnell, aber mit weniger Wettbewerb.",
+          "wenn": {
+            "regime": [
+              "national"
+            ],
+            "volumen_max_wg": "vv_ohne_tnw_ld"
+          },
+          "voraussetzungen": [
+            "grundsätzlich mindestens drei geeignete Unternehmen auffordern",
+            "Auswahl der Unternehmen sachlich begründen"
+          ],
+          "pflichten": [
+            "Wechselgebot mit Dokumentation",
+            "ab 25.000 € Veröffentlichung des vergebenen Auftrags (ex-post)"
+          ],
+          "risiken": [
+            "Weniger Wettbewerb – oft höhere Preise",
+            "Vorwurf der 'Stammlieferanten' bei fehlender Rotation"
+          ],
+          "rechtsgrundlage": "§ 8 Abs. 4 Nr. 17, § 12 Abs. 2, § 30 UVgO; Berlin: AV LHO § 55 Nr. 3.3.2, 3.6",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-01-VVM",
+          "titel": "Verhandlungsvergabe mit Teilnahmewettbewerb",
+          "rang": 2,
+          "rang_wenn": {
+            "verhandlungsbedarf": 1
+          },
+          "kurz": "Öffentlicher Aufruf, Auswahl geeigneter Bewerber, dann Verhandlung – ideal, wenn Lösung oder Konzept erst gemeinsam geschärft werden müssen.",
+          "wenn": {
+            "regime": [
+              "national"
+            ],
+            "volumen_max_wg": "vv_mit_tnw_ld"
+          },
+          "voraussetzungen": [
+            "öffentliche Bekanntmachung des Teilnahmewettbewerbs",
+            "Auswahlkriterien, Mindest- und ggf. Höchstzahl vorab angeben"
+          ],
+          "pflichten": [
+            "Auswahlmatrix mit Bekanntmachung veröffentlichen",
+            "Verhandlungen dokumentieren",
+            "Zuschlagskriterien nicht verhandeln"
+          ],
+          "risiken": [
+            "Höherer Aufwand als Ausschreibung ohne Verhandlung"
+          ],
+          "rechtsgrundlage": "§ 8 Abs. 4 Nr. 17, §§ 10, 12, 36 UVgO; Berlin: AV LHO § 55 Nr. 3.3.2",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-01-BAM",
+          "titel": "Beschränkte Ausschreibung mit Teilnahmewettbewerb",
+          "rang": 2,
+          "kurz": "Erst Eignung prüfen, dann nur ausgewählte Bewerber bieten lassen – sinnvoll, wenn Sie viele Bewerbungen erwarten oder die Eignung aufwendig zu prüfen ist.",
+          "wenn": {
+            "regime": [
+              "national"
+            ]
+          },
+          "voraussetzungen": [
+            "Auswahlkriterien, Mindestzahl (mind. 3) und ggf. Höchstzahl in der Bekanntmachung"
+          ],
+          "pflichten": [
+            "Auswahlmatrix veröffentlichen",
+            "Höchstzahl strikt einhalten"
+          ],
+          "risiken": [
+            "Zweistufig – längere Gesamtdauer"
+          ],
+          "rechtsgrundlage": "§ 8 Abs. 2, §§ 10, 36 UVgO",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-01-BAO",
+          "titel": "Beschränkte Ausschreibung ohne Teilnahmewettbewerb",
+          "rang": 3,
+          "kurz": "Sie fordern mindestens drei Unternehmen direkt auf, ohne Verhandlung – in der Regel ist die Verhandlungsvergabe ohne Teilnahmewettbewerb bei gleicher Wertgrenze flexibler.",
+          "wenn": {
+            "regime": [
+              "national"
+            ],
+            "volumen_max_wg": "ba_ohne_tnw_ld"
+          },
+          "voraussetzungen": [
+            "grundsätzlich mindestens drei Unternehmen"
+          ],
+          "pflichten": [
+            "Wechselgebot mit Dokumentation",
+            "ab 25.000 € Veröffentlichung ex-post"
+          ],
+          "risiken": [
+            "Keine Verhandlung möglich, trotzdem eingeschränkter Wettbewerb"
+          ],
+          "rechtsgrundlage": "§ 8 Abs. 3 Nr. 2, §§ 11, 30 UVgO; Berlin: AV LHO § 55 Nr. 3.3.1",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-01-VVO-NOT",
+          "titel": "Verhandlungsvergabe ohne Teilnahmewettbewerb (Ausnahmefall)",
+          "rang": 3,
+          "kurz": "Oberhalb der Wertgrenze nur zulässig, wenn ein gesetzlicher Ausnahmegrund vorliegt – etwa Dringlichkeit oder nur ein möglicher Anbieter.",
+          "wenn": {
+            "regime": [
+              "national"
+            ],
+            "volumen_min_wg": "vv_ohne_tnw_ld",
+            "flag_any": [
+              "dringlich",
+              "alleinstellung"
+            ]
+          },
+          "voraussetzungen": [
+            "Ausnahmetatbestand des § 8 Abs. 4 UVgO liegt vor und ist belegt"
+          ],
+          "pflichten": [
+            "Ausnahmegrund im Vergabevermerk ausführlich begründen",
+            "Veröffentlichung ex-post ab 25.000 €"
+          ],
+          "risiken": [
+            "Ausnahmen werden eng ausgelegt; selbst verschuldete Eile zählt nicht"
+          ],
+          "rechtsgrundlage": "§ 8 Abs. 4 UVgO",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-01-OV",
+          "titel": "Offenes Verfahren (EU-weit)",
+          "rang": 1,
+          "rang_wenn": {
+            "verhandlungsbedarf": 2
+          },
+          "kurz": "EU-weite Ausschreibung ohne Verhandlung – das rechtssicherste Standardverfahren für klar beschreibbare Leistungen.",
+          "wenn": {
+            "regime": [
+              "eu"
+            ]
+          },
+          "voraussetzungen": [
+            "Leistung eindeutig beschreibbar"
+          ],
+          "pflichten": [
+            "EU-Bekanntmachung (eForms)",
+            "Mindestfristen nach § 15 VgV",
+            "Vorabinformation und Wartefrist nach § 134 GWB"
+          ],
+          "risiken": [
+            "Keine Verhandlung möglich"
+          ],
+          "rechtsgrundlage": "§ 119 Abs. 2, 3 GWB; §§ 14 Abs. 2, 15 VgV",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-01-NOV",
+          "titel": "Nicht offenes Verfahren (EU-weit)",
+          "rang": 2,
+          "kurz": "Erst Teilnahmewettbewerb, dann Angebote von mindestens fünf ausgewählten Bewerbern – sinnvoll bei vielen erwarteten Bewerbern oder aufwendiger Angebotsprüfung.",
+          "wenn": {
+            "regime": [
+              "eu"
+            ]
+          },
+          "voraussetzungen": [
+            "Mindestzahl 5, Auswahlkriterien und ggf. Höchstzahl in der Bekanntmachung"
+          ],
+          "pflichten": [
+            "Auswahlmatrix veröffentlichen",
+            "Höchstzahl strikt einhalten",
+            "Mindestfristen nach § 16 VgV"
+          ],
+          "risiken": [
+            "Längere Gesamtdauer"
+          ],
+          "rechtsgrundlage": "§ 119 Abs. 4 GWB; §§ 14 Abs. 2, 16, 51 VgV",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-01-VVM-EU",
+          "titel": "Verhandlungsverfahren mit Teilnahmewettbewerb (EU-weit)",
+          "rang": 3,
+          "rang_wenn": {
+            "verhandlungsbedarf": 1
+          },
+          "kurz": "Verhandeln ist EU-weit nur bei bestimmten Gründen erlaubt – etwa wenn die Lösung angepasst werden muss oder konzeptionelle Leistungen gefragt sind.",
+          "wenn": {
+            "regime": [
+              "eu"
+            ],
+            "nicht_flag": [
+              "soziale_dl"
+            ]
+          },
+          "voraussetzungen": [
+            "Zulassungsgrund nach § 14 Abs. 3 VgV liegt vor (z.B. Anpassung bereits verfügbarer Lösungen nötig, konzeptionelle oder innovative Lösungen, Komplexität, Spezifikationen nicht präzise festlegbar)"
+          ],
+          "pflichten": [
+            "Zulassungsgrund im Vergabevermerk begründen",
+            "Mindestanforderungen und Zuschlagskriterien sind nicht verhandelbar",
+            "Mindestzahl 3"
+          ],
+          "risiken": [
+            "Fehlt der Zulassungsgrund, ist das Verfahren angreifbar"
+          ],
+          "rechtsgrundlage": "§ 119 Abs. 5 GWB; §§ 14 Abs. 3, 17, 51 VgV",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-01-WD",
+          "titel": "Wettbewerblicher Dialog (EU-weit)",
+          "rang": 3,
+          "kurz": "Für besonders komplexe Vorhaben, bei denen Sie die beste technische oder rechtliche Lösung erst im Dialog mit den Unternehmen finden.",
+          "wenn": {
+            "regime": [
+              "eu"
+            ],
+            "flag": [
+              "verhandlungsbedarf"
+            ]
+          },
+          "voraussetzungen": [
+            "Zulassungsgrund nach § 14 Abs. 3 VgV"
+          ],
+          "pflichten": [
+            "Dialogphasen und Zuschlagskriterien vorab festlegen"
+          ],
+          "risiken": [
+            "Hoher Zeit- und Ressourcenaufwand"
+          ],
+          "rechtsgrundlage": "§ 119 Abs. 6 GWB; § 18 VgV",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-01-VVO-EU",
+          "titel": "Verhandlungsverfahren ohne Teilnahmewettbewerb (EU-weit)",
+          "rang": 3,
+          "kurz": "Nur in eng begrenzten Ausnahmefällen – z.B. wenn nur ein Unternehmen in Frage kommt oder äußerste Dringlichkeit besteht.",
+          "wenn": {
+            "regime": [
+              "eu"
+            ],
+            "flag_any": [
+              "dringlich",
+              "alleinstellung"
+            ]
+          },
+          "voraussetzungen": [
+            "Ausnahmetatbestand nach § 14 Abs. 4 VgV liegt vor und ist belegt"
+          ],
+          "pflichten": [
+            "Ausnahmegrund ausführlich dokumentieren",
+            "Vergabebekanntmachung nach Zuschlag"
+          ],
+          "risiken": [
+            "Höchstes Risiko der Unwirksamkeit (De-facto-Vergabe, § 135 GWB)",
+            "Dringlichkeit darf nicht selbst verursacht sein"
+          ],
+          "rechtsgrundlage": "§ 14 Abs. 4 VgV; § 135 GWB",
+          "sicherheitsgrad": "gruen"
+        }
+      ]
+    },
+    {
+      "id": "EP-02",
+      "titel": "Losbildung",
+      "frage": "In Lose aufteilen oder als Ganzes vergeben?",
+      "optionen": [
+        {
+          "id": "EP-02-LOSE",
+          "titel": "Aufteilung in Fach- und/oder Teillose",
+          "rang": 1,
+          "kurz": "Der gesetzliche Regelfall: Lose nach Fachgebieten oder Mengen stärken kleine und mittlere Unternehmen und den Wettbewerb.",
+          "wenn": {
+            "regime": [
+              "national",
+              "eu"
+            ]
+          },
+          "voraussetzungen": [
+            "sinnvolle, abgrenzbare Teilleistungen"
+          ],
+          "pflichten": [
+            "Losaufteilung in der Bekanntmachung angeben",
+            "ggf. Loslimitierung vorab festlegen"
+          ],
+          "risiken": [
+            "Mehr Schnittstellen und Koordinationsaufwand"
+          ],
+          "rechtsgrundlage": "§ 97 Abs. 4, § 97a GWB; § 30 VgV; § 22 UVgO",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-02-GESAMT",
+          "titel": "Gesamtvergabe",
+          "rang": 3,
+          "kurz": "Nur zulässig, wenn wirtschaftliche oder technische Gründe es erfordern – die Begründung muss konkret und projektbezogen sein.",
+          "wenn": {
+            "regime": [
+              "national",
+              "eu"
+            ]
+          },
+          "voraussetzungen": [
+            "konkrete wirtschaftliche oder technische Gründe (z.B. hohe Schnittstellenrisiken, technische Einheit)"
+          ],
+          "pflichten": [
+            "Begründung im Vergabevermerk",
+            "ggf. Auftragnehmer verpflichten, KMU bei Unteraufträgen zu berücksichtigen (§ 97a Abs. 5 GWB)"
+          ],
+          "risiken": [
+            "Häufiger Rügegegenstand; pauschale Hinweise auf 'Vereinfachung' genügen nicht"
+          ],
+          "rechtsgrundlage": "§ 97a Abs. 2 GWB",
+          "sicherheitsgrad": "gruen"
+        }
+      ]
+    },
+    {
+      "id": "EP-03",
+      "titel": "Vertragsstruktur",
+      "frage": "Einzelauftrag oder Rahmenvereinbarung?",
+      "optionen": [
+        {
+          "id": "EP-03-RV",
+          "titel": "Rahmenvereinbarung",
+          "rang": 1,
+          "kurz": "Bei wiederkehrendem Bedarf mit unbekannten Mengen: einmal ausschreiben, dann flexibel abrufen – aber mit angegebener Höchstmenge.",
+          "wenn": {
+            "regime": [
+              "national",
+              "eu"
+            ],
+            "flag": [
+              "wiederkehrender_bedarf"
+            ]
+          },
+          "voraussetzungen": [
+            "geschätzte Menge und Höchstmenge bzw. Höchstwert angeben",
+            "Laufzeit EU höchstens 4 Jahre, national höchstens 6 Jahre (Ausnahmen begründen)"
+          ],
+          "pflichten": [
+            "Abrufregeln vorab festlegen"
+          ],
+          "risiken": [
+            "Fehlende Höchstmenge macht die Vereinbarung angreifbar"
+          ],
+          "rechtsgrundlage": "§ 103 Abs. 5 GWB; § 21 VgV; § 15 UVgO; EuGH, 17.06.2021 – C-23/20",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-03-EINZEL",
+          "titel": "Einzelauftrag mit Optionen",
+          "rang": 1,
+          "rang_wenn": {
+            "wiederkehrender_bedarf": 2
+          },
+          "kurz": "Bei klar umrissenem Bedarf: ein Auftrag, Verlängerungs- oder Mengenoptionen vorab festgelegt und im Auftragswert mitgerechnet.",
+          "wenn": {
+            "regime": [
+              "national",
+              "eu"
+            ]
+          },
+          "voraussetzungen": [
+            "Optionen klar und eindeutig formulieren"
+          ],
+          "pflichten": [
+            "Optionen in die Auftragswertschätzung einrechnen (§ 3 VgV)"
+          ],
+          "risiken": [
+            "Nicht vorgesehene spätere Erweiterungen können eine neue Vergabe erfordern (§ 132 GWB)"
+          ],
+          "rechtsgrundlage": "§ 3 Abs. 1 VgV; § 132 Abs. 2 Nr. 1 GWB",
+          "sicherheitsgrad": "gruen"
+        }
+      ]
+    },
+    {
+      "id": "EP-04",
+      "titel": "Eignung und Nachweise",
+      "frage": "Wie prüfen Sie, ob Unternehmen den Auftrag ausführen können?",
+      "optionen": [
+        {
+          "id": "EP-04-EIGEN",
+          "titel": "Eigenerklärungen, Belege nur vom Bestbieter",
+          "rang": 1,
+          "kurz": "Unternehmen bestätigen ihre Eignung zunächst selbst; Belege fordern Sie nur von den aussichtsreichen Bietern an.",
+          "wenn": {
+            "regime": [
+              "national",
+              "eu"
+            ]
+          },
+          "voraussetzungen": [
+            "Eignungskriterien in der Bekanntmachung (oder über Direktlink) angeben"
+          ],
+          "pflichten": [
+            "Nachweise vor Zuschlag vom Bestbieter anfordern und prüfen",
+            "EU: Einheitliche Europäische Eigenerklärung akzeptieren"
+          ],
+          "risiken": [
+            "Scheitert der Bestbieter am Nachweis, verzögert sich der Zuschlag – Nachrücker einplanen"
+          ],
+          "rechtsgrundlage": "§ 122 GWB (seit 01.07.2026); §§ 42, 48, 50 VgV; § 35 UVgO",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-04-MIN",
+          "titel": "Verhältnismäßige Mindestanforderungen",
+          "rang": 1,
+          "kurz": "Nur verlangen, was für den Auftrag wirklich nötig ist – Mindestumsatz höchstens das Zweifache des Auftragswerts, Referenzen in der Regel aus den letzten drei Jahren.",
+          "wenn": {
+            "regime": [
+              "national",
+              "eu"
+            ]
+          },
+          "voraussetzungen": [
+            "Bezug zum Auftragsgegenstand"
+          ],
+          "pflichten": [
+            "Belange kleiner, mittlerer und junger Unternehmen berücksichtigen",
+            "Vergleichbarkeit von Referenzen klar beschreiben"
+          ],
+          "risiken": [
+            "Überzogene Anforderungen verengen den Wettbewerb und sind angreifbar"
+          ],
+          "rechtsgrundlage": "§ 122 Abs. 4 GWB; § 42 Abs. 2, § 45 Abs. 2, § 46 Abs. 3 Nr. 1 VgV",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-04-VOLL",
+          "titel": "Vollständige Nachweise schon mit dem Angebot",
+          "rang": 3,
+          "kurz": "Seit Juli 2026 nicht mehr der Regelfall – nur noch mit besonderer Begründung sinnvoll.",
+          "wenn": {
+            "regime": [
+              "eu"
+            ]
+          },
+          "voraussetzungen": [
+            "dokumentierte Begründung, warum Eigenerklärungen nicht genügen"
+          ],
+          "pflichten": [
+            "Begründung im Vermerk"
+          ],
+          "risiken": [
+            "Angreifbar als unverhältnismäßig; mehr Ausschlüsse aus formalen Gründen"
+          ],
+          "rechtsgrundlage": "§ 122 GWB (seit 01.07.2026)",
+          "sicherheitsgrad": "gelb"
+        }
+      ]
+    },
+    {
+      "id": "EP-05",
+      "titel": "Zuschlagskriterien",
+      "frage": "Nach welchen Kriterien wird das wirtschaftlichste Angebot ermittelt?",
+      "optionen": [
+        {
+          "id": "EP-05-PREIS",
+          "titel": "Preis als einziges Kriterium",
+          "rang": 1,
+          "rang_wenn": {
+            "standardisiert_nein": 3,
+            "personalintensiv": 3
+          },
+          "kurz": "Zulässig und einfach, wenn die Leistungsbeschreibung die Qualität vollständig festlegt – etwa bei marktüblichen Standardprodukten.",
+          "wenn": {
+            "regime": [
+              "national",
+              "eu"
+            ],
+            "flag": [
+              "standardisiert"
+            ]
+          },
+          "voraussetzungen": [
+            "Leistungsbeschreibung legt alle qualitätsrelevanten Merkmale fest"
+          ],
+          "pflichten": [
+            "Prüfung ungewöhnlich niedriger Angebote"
+          ],
+          "risiken": [
+            "Bleiben Qualitätsunterschiede möglich, bildet der Preis allein das beste Preis-Leistungs-Verhältnis nicht ab"
+          ],
+          "rechtsgrundlage": "§ 127 Abs. 1 GWB; § 58 VgV; § 43 UVgO",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-05-PQ",
+          "titel": "Preis und Qualität mit veröffentlichter Gewichtung",
+          "rang": 1,
+          "rang_wenn": {
+            "standardisiert": 2
+          },
+          "kurz": "Preis und qualitative Kriterien (z.B. Konzept, Service, Lieferzeit) mit festen Gewichten – der Standard, wenn sich Angebote in der Qualität unterscheiden.",
+          "wenn": {
+            "regime": [
+              "national",
+              "eu"
+            ]
+          },
+          "voraussetzungen": [
+            "Kriterien mit Bezug zum Auftragsgegenstand"
+          ],
+          "pflichten": [
+            "Kriterien, Unterkriterien und Gewichte auf allen Ebenen veröffentlichen",
+            "Punkteskala mit beschriebenen Erfüllungsgraden (empfohlen)",
+            "Preisformel vorab festlegen",
+            "alle Angebote vollständig bewerten und dokumentieren"
+          ],
+          "risiken": [
+            "Nachträglich gebildete Unterkriterien oder Gewichte machen die Wertung angreifbar"
+          ],
+          "rechtsgrundlage": "§ 127 Abs. 1, 3–5 GWB; § 58 VgV; § 43 UVgO; BGH, 04.04.2017 – X ZB 3/17; OLG Düsseldorf, 24.03.2021 – Verg 34/20",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-05-PERSONAL",
+          "titel": "Qualitätskriterien für personalintensive Dienstleistungen",
+          "rang": 1,
+          "kurz": "Bei Reinigung, Bewachung oder Catering Qualität mitbewerten (z.B. Leistungswerte, Einarbeitung, Qualitätssicherung) und Niedrigpreise genau prüfen.",
+          "wenn": {
+            "regime": [
+              "national",
+              "eu"
+            ],
+            "flag": [
+              "personalintensiv"
+            ]
+          },
+          "voraussetzungen": [
+            "Kriterien auf die konkrete Ausführung beziehen"
+          ],
+          "pflichten": [
+            "Prüfung ungewöhnlich niedriger Angebote, insbesondere Einhaltung von Mindestlohn und Tariftreue (Landesrecht)",
+            "Einsatz benannten Personals vertraglich absichern, wenn es bewertet wird"
+          ],
+          "risiken": [
+            "Reiner Preiswettbewerb fördert nicht auskömmliche Kalkulationen"
+          ],
+          "rechtsgrundlage": "§ 58 Abs. 2 Nr. 2, § 60 VgV; Landestariftreuerecht (Berlin: BerlAVG)",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-05-IT",
+          "titel": "IT: Lebenszykluskosten und digitale Souveränität",
+          "rang": 1,
+          "kurz": "Bei IT nicht nur den Anschaffungspreis werten, sondern Betriebs-, Lizenz- und Wechselkosten – und seit Juli 2026 auch Aspekte digitaler Souveränität.",
+          "wenn": {
+            "regime": [
+              "national",
+              "eu"
+            ],
+            "flag": [
+              "it"
+            ]
+          },
+          "voraussetzungen": [
+            "Berechnungsmethode der Lebenszykluskosten in den Unterlagen angeben"
+          ],
+          "pflichten": [
+            "EVB-IT-Vertragsmuster prüfen",
+            "Kriterien zur digitalen Souveränität konkret und messbar formulieren"
+          ],
+          "risiken": [
+            "Unklare Souveränitätskriterien können diskriminierend wirken"
+          ],
+          "rechtsgrundlage": "§ 58 Abs. 2 VgV (seit 01.07.2026), § 59 VgV",
+          "sicherheitsgrad": "gelb"
+        },
+        {
+          "id": "EP-05-FEST",
+          "titel": "Festpreis, Wettbewerb nur über Qualität",
+          "rang": 2,
+          "kurz": "Sie geben Preis oder Budget fest vor, und das beste Konzept gewinnt – sinnvoll bei festem Budget und stark qualitätsgetriebenen Leistungen.",
+          "wenn": {
+            "regime": [
+              "national",
+              "eu"
+            ],
+            "flag": [
+              "verhandlungsbedarf"
+            ]
+          },
+          "voraussetzungen": [
+            "marktgerechter Festpreis (Markterkundung)"
+          ],
+          "pflichten": [
+            "Qualitätskriterien besonders sorgfältig beschreiben und bewerten"
+          ],
+          "risiken": [
+            "Zu niedriger Festpreis führt zu wenig Angeboten"
+          ],
+          "rechtsgrundlage": "§ 58 Abs. 2 Satz 3 VgV",
+          "sicherheitsgrad": "gruen"
+        }
+      ]
+    },
+    {
+      "id": "EP-06",
+      "titel": "Preisformel",
+      "frage": "Wie wird der Preis in Punkte umgerechnet?",
+      "optionen": [
+        {
+          "id": "EP-06-VERH",
+          "titel": "Verhältnismethode (niedrigster Preis ÷ Angebotspreis)",
+          "rang": 1,
+          "kurz": "Einfach, gut nachvollziehbar und robust – bei Preis/Qualität 50/50 und Skala 0–5 gleicht eine Notenstufe rund 25 % Mehrpreis aus.",
+          "wenn": {
+            "regime": [
+              "national",
+              "eu"
+            ],
+            "nicht_flag": [
+              "standardisiert"
+            ]
+          },
+          "voraussetzungen": [
+            "Formel vor Angebotsöffnung festlegen"
+          ],
+          "pflichten": [
+            "Formel veröffentlichen (empfohlen)",
+            "Szenariorechnung im Vermerk"
+          ],
+          "risiken": [
+            "Geringe Preisspreizung, wenn Angebote eng beieinanderliegen"
+          ],
+          "rechtsgrundlage": "BGH, 04.04.2017 – X ZB 3/17; OLG Düsseldorf, 02.05.2018 – Verg 3/18",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-06-INTER",
+          "titel": "Lineare Interpolation mit festem Nullpunkt",
+          "rang": 2,
+          "kurz": "Bestpreis erhält volle Punkte, ab einem festen Wert (z.B. doppelter Bestpreis) null Punkte – der Nullpunkt bestimmt, wie stark der Preis wirkt.",
+          "wenn": {
+            "regime": [
+              "national",
+              "eu"
+            ],
+            "nicht_flag": [
+              "standardisiert"
+            ]
+          },
+          "voraussetzungen": [
+            "Nullpunkt bewusst wählen und begründen"
+          ],
+          "pflichten": [
+            "Formel veröffentlichen",
+            "Szenariorechnung im Vermerk"
+          ],
+          "risiken": [
+            "Ein enger Nullpunkt kann das Preisgewicht faktisch verschieben"
+          ],
+          "rechtsgrundlage": "BGH, 04.04.2017 – X ZB 3/17",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-06-RICHT",
+          "titel": "Richtwertmethode (Leistungspunkte je Euro)",
+          "rang": 2,
+          "kurz": "Setzt Leistung und Preis direkt ins Verhältnis – robust gegen Ausreißer, erlaubt aber keine freie Gewichtung von Preis und Qualität.",
+          "wenn": {
+            "regime": [
+              "national",
+              "eu"
+            ],
+            "flag": [
+              "it"
+            ]
+          },
+          "voraussetzungen": [
+            "Methode nach UfAB beschreiben"
+          ],
+          "pflichten": [
+            "Methode veröffentlichen"
+          ],
+          "risiken": [
+            "Für Bieter weniger intuitiv"
+          ],
+          "rechtsgrundlage": "Unterlage für Ausschreibung und Bewertung von IT-Leistungen (UfAB); § 127 GWB",
+          "sicherheitsgrad": "gruen"
+        }
+      ]
+    },
+    {
+      "id": "EP-07",
+      "titel": "Nebenangebote",
+      "frage": "Sollen alternative Lösungen der Bieter zugelassen werden?",
+      "optionen": [
+        {
+          "id": "EP-07-NEIN",
+          "titel": "Nebenangebote ausdrücklich ausschließen",
+          "rang": 1,
+          "rang_wenn": {
+            "verhandlungsbedarf": 2
+          },
+          "kurz": "Bei klar beschriebenen Leistungen die einfachste und rechtssicherste Lösung – aber ausdrücklich erklären.",
+          "wenn": {
+            "regime": [
+              "national",
+              "eu"
+            ]
+          },
+          "voraussetzungen": [],
+          "pflichten": [
+            "Seit Juli 2026 müssen Sie ausdrücklich angeben, ob Nebenangebote zugelassen sind"
+          ],
+          "risiken": [
+            "Innovationspotenzial der Bieter bleibt ungenutzt"
+          ],
+          "rechtsgrundlage": "§ 35 VgV (seit 01.07.2026); § 25 UVgO",
+          "sicherheitsgrad": "gelb"
+        },
+        {
+          "id": "EP-07-JA",
+          "titel": "Nebenangebote mit Mindestanforderungen zulassen",
+          "rang": 1,
+          "rang_wenn": {
+            "verhandlungsbedarf_nein": 2
+          },
+          "kurz": "Sinnvoll bei funktional beschriebenen Leistungen – Mindestanforderungen festlegen und Zuschlagskriterien so wählen, dass sie auch Nebenangebote bewerten.",
+          "wenn": {
+            "regime": [
+              "national",
+              "eu"
+            ]
+          },
+          "voraussetzungen": [
+            "Mindestanforderungen an Nebenangebote angeben"
+          ],
+          "pflichten": [
+            "Zuschlagskriterien müssen auf Haupt- und Nebenangebote anwendbar sein"
+          ],
+          "risiken": [
+            "Höherer Prüfaufwand"
+          ],
+          "rechtsgrundlage": "§ 35 Abs. 2 VgV (auch bei Preis als einzigem Kriterium zulässig); § 25 UVgO",
+          "sicherheitsgrad": "gruen"
+        }
+      ]
+    },
+    {
+      "id": "EP-08",
+      "titel": "Fristen",
+      "frage": "Welche Angebots- und Teilnahmefristen sind angemessen?",
+      "optionen": [
+        {
+          "id": "EP-08-EU",
+          "titel": "EU-Mindestfristen plus Puffer",
+          "rang": 1,
+          "kurz": "Offenes Verfahren mindestens 35 Tage (30 bei elektronischer Angebotsabgabe); Teilnahmewettbewerb 30 Tage, Angebotsphase 30 bzw. 25 Tage – bei komplexen Leistungen länger.",
+          "wenn": {
+            "regime": [
+              "eu"
+            ]
+          },
+          "voraussetzungen": [
+            "Fristen nach Komplexität bemessen, nicht nur nach Minimum"
+          ],
+          "pflichten": [
+            "Fristenrechner verwenden",
+            "Verlängerung bei wesentlichen Änderungen der Unterlagen"
+          ],
+          "risiken": [
+            "Zu kurze Fristen führen zu wenigen oder fehlerhaften Angeboten"
+          ],
+          "rechtsgrundlage": "§§ 15–17, 20 VgV",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-08-EU-DRING",
+          "titel": "Verkürzte Fristen wegen Dringlichkeit",
+          "rang": 3,
+          "kurz": "Verkürzung auf 15 bzw. 10 Tage nur bei hinreichend begründeter Dringlichkeit.",
+          "wenn": {
+            "regime": [
+              "eu"
+            ],
+            "flag": [
+              "dringlich"
+            ]
+          },
+          "voraussetzungen": [
+            "Dringlichkeit konkret begründet"
+          ],
+          "pflichten": [
+            "Begründung im Vermerk"
+          ],
+          "risiken": [
+            "Angreifbar, wenn die Dringlichkeit nicht belegt ist"
+          ],
+          "rechtsgrundlage": "§ 15 Abs. 3, § 16 Abs. 3 und 7, § 17 Abs. 3 und 8 VgV",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-08-NAT",
+          "titel": "Angemessene Frist (national)",
+          "rang": 1,
+          "kurz": "National gibt es keine festen Mindestfristen; die Frist muss angemessen sein – als Faustregel mindestens 10 Kalendertage, bei Konzepten deutlich mehr.",
+          "wenn": {
+            "regime": [
+              "national"
+            ]
+          },
+          "voraussetzungen": [
+            "Komplexität und Aufwand der Angebotserstellung berücksichtigen"
+          ],
+          "pflichten": [
+            "Fristbemessung im Vermerk kurz begründen"
+          ],
+          "risiken": [
+            "Die 10-Tage-Faustregel ist Praxis, keine gesetzliche Vorgabe"
+          ],
+          "rechtsgrundlage": "§ 13 UVgO",
+          "sicherheitsgrad": "gelb"
+        }
+      ]
+    },
+    {
+      "id": "EP-09",
+      "titel": "Wertungsreihenfolge",
+      "frage": "Erst Angebote werten oder erst Eignung prüfen?",
+      "optionen": [
+        {
+          "id": "EP-09-ANGEBOT",
+          "titel": "Erst Angebote werten, dann Eignung des Bestbieters prüfen",
+          "rang": 1,
+          "kurz": "Im offenen Verfahren seit Juli 2026 der Regelfall – Sie prüfen die Eignung nur beim aussichtsreichsten Angebot.",
+          "wenn": {
+            "regime": [
+              "eu"
+            ]
+          },
+          "voraussetzungen": [],
+          "pflichten": [
+            "Abweichung (z.B. wegen erhöhten Aufwands) ist ohne Begründung möglich"
+          ],
+          "risiken": [],
+          "rechtsgrundlage": "§ 42 Abs. 4 VgV (seit 01.07.2026)",
+          "sicherheitsgrad": "gruen"
+        }
+      ]
+    },
+    {
+      "id": "EP-10",
+      "titel": "Nachforderung von Unterlagen",
+      "frage": "Wie gehen Sie mit fehlenden oder fehlerhaften Unterlagen um?",
+      "optionen": [
+        {
+          "id": "EP-10-VORAB",
+          "titel": "Nachforderung vorab ausdrücklich regeln",
+          "rang": 1,
+          "kurz": "Legen Sie in den Unterlagen fest, ob und was Sie nachfordern – das schafft Gleichbehandlung und spart Streit. Preise und bewertete Inhalte dürfen nicht nachgebessert werden.",
+          "wenn": {
+            "regime": [
+              "national",
+              "eu"
+            ]
+          },
+          "voraussetzungen": [],
+          "pflichten": [
+            "Entscheidung zur Nachforderung einheitlich für alle Bieter treffen und dokumentieren"
+          ],
+          "risiken": [
+            "Berlin: Die bisherige Soll-Vorgabe zur Nachforderung ist entfallen – die Entscheidung liegt im Ermessen und muss begründet werden"
+          ],
+          "rechtsgrundlage": "§ 56 Abs. 2 und 3 VgV; § 41 UVgO; Berlin: AV LHO § 55 Nr. 9.3 gestrichen (18.09.2026)",
+          "sicherheitsgrad": "gruen"
+        }
+      ]
+    }
+  ]
+}

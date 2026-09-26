@@ -1,0 +1,90 @@
+{
+  "stand": "2026-09-26",
+  "hinweis": "Zentrale Rechtsstand-Datei. Schwellenwerte und Wertgrenzen nur hier pflegen – Advisor, Optionskatalog und KI-Assistent lesen diese Datei.",
+  "eu_schwellenwerte": {
+    "gueltig_ab": "2026-01-01",
+    "gueltig_bis": "2027-12-31",
+    "quelle": "Delegierte Verordnungen (EU) zu den Schwellenwerten 2026/2027; Übersicht: https://blog.cosinex.de/2025/10/27/eu-schwellenwerte-2026-2027/",
+    "werte": {
+      "bau": 5404000,
+      "liefer_dienst": 216000,
+      "liefer_dienst_oberste_bundesbehoerden": 140000,
+      "liefer_dienst_sektoren": 432000,
+      "konzession": 5404000,
+      "soziale_besondere_dl": 750000,
+      "soziale_besondere_dl_sektoren": 1000000
+    }
+  },
+  "landes_packs": {
+    "standard": {
+      "name": "Ohne Landesregelung (UVgO/VOB/A pur)",
+      "stand": "2017/2019",
+      "quelle": "UVgO 2017; VOB/A 2019",
+      "sicherheitsgrad": "rot",
+      "hinweis": "Die UVgO gilt nur, soweit Bund oder Land sie über das Haushaltsrecht in Kraft gesetzt haben. Die Wertgrenzen legt fast jedes Land selbst fest – bitte das Bundesland in den Organisationsdaten hinterlegen.",
+      "wertgrenzen": {
+        "direktauftrag_ld": 1000,
+        "direktauftrag_freiberuflich": null,
+        "direktauftrag_digital_innovation": null,
+        "ba_ohne_tnw_ld": null,
+        "vv_ohne_tnw_ld": null,
+        "vv_mit_tnw_ld": null,
+        "direktauftrag_bau": 3000,
+        "ba_ohne_tnw_bau": null,
+        "freihaendig_bau": null,
+        "evergabe_direktauftrag_ab": null
+      }
+    },
+    "bund": {
+      "name": "Bund",
+      "stand": "2026-07-01",
+      "quelle": "§ 55 Abs. 2 BHO i.d.F. Vergabebeschleunigungsgesetz (BGBl. 2026 I Nr. 137); Verwaltungsvorschriften Bund vom 10.06.2026 (Überblick: https://www.btl-recht.de/blog/vergabebeschleunigungsgesetz-in-kraft-getreten/)",
+      "sicherheitsgrad": "gelb",
+      "hinweis": "Direktauftragsgrenze aus dem Gesetz gesichert; Grenze für die Verhandlungsvergabe ohne Teilnahmewettbewerb bisher nur über Sekundärquelle belegt.",
+      "wertgrenzen": {
+        "direktauftrag_ld": 50000,
+        "direktauftrag_freiberuflich": 50000,
+        "direktauftrag_digital_innovation": null,
+        "ba_ohne_tnw_ld": null,
+        "vv_ohne_tnw_ld": 100000,
+        "vv_mit_tnw_ld": null,
+        "direktauftrag_bau": 50000,
+        "ba_ohne_tnw_bau": null,
+        "freihaendig_bau": null,
+        "evergabe_direktauftrag_ab": null
+      }
+    },
+    "berlin": {
+      "name": "Berlin",
+      "stand": "2026-09-18",
+      "quelle": "AV LHO zu § 55, Rundschreiben SenFin vom 18.09.2026 (II B 53 - H 1051 055-1/2023-16-53), ab sofort anzuwenden",
+      "sicherheitsgrad": "gruen",
+      "hinweis": "Wertgrenzen werden spätestens Anfang 2029 evaluiert. Bei Verfahren ohne Teilnahmewettbewerb und bei Direktaufträgen gilt das Wechselgebot – Ausnahmen sind zu begründen und zu dokumentieren (Nr. 3.6).",
+      "wertgrenzen": {
+        "direktauftrag_ld": 75000,
+        "direktauftrag_freiberuflich": 75000,
+        "direktauftrag_digital_innovation": 180000,
+        "direktauftrag_digital_innovation_befristet_bis": "2028-12-31",
+        "ba_ohne_tnw_ld": 200000,
+        "vv_ohne_tnw_ld": 200000,
+        "vv_mit_tnw_ld": 200000,
+        "direktauftrag_bau": 500000,
+        "ba_ohne_tnw_bau": 1000000,
+        "freihaendig_bau": 1000000,
+        "evergabe_direktauftrag_ab": 25000
+      },
+      "fundstellen": {
+        "direktauftrag_ld": "AV LHO § 55 Nr. 3.3.3",
+        "direktauftrag_digital_innovation": "AV LHO § 55 Nr. 3.3.4 (Experimentierklausel, befristet bis 31.12.2028)",
+        "ba_ohne_tnw_ld": "AV LHO § 55 Nr. 3.3.1 i.V.m. § 8 Abs. 3 Nr. 2 UVgO",
+        "vv_ohne_tnw_ld": "AV LHO § 55 Nr. 3.3.2 i.V.m. § 8 Abs. 4 Nr. 17 UVgO",
+        "vv_mit_tnw_ld": "AV LHO § 55 Nr. 3.3.2 i.V.m. § 8 Abs. 4 Nr. 17 UVgO",
+        "direktauftrag_freiberuflich": "AV LHO § 55 Nr. 3.5.2",
+        "direktauftrag_bau": "AV LHO § 55 Nr. 3.4.3",
+        "ba_ohne_tnw_bau": "AV LHO § 55 Nr. 3.4.1",
+        "freihaendig_bau": "AV LHO § 55 Nr. 3.4.2",
+        "evergabe_direktauftrag_ab": "AV LHO § 55 Nr. 8.3, 8.5"
+      }
+    }
+  }
+}

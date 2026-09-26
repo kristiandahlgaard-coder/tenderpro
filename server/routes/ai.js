@@ -9,7 +9,28 @@ const express = require('express');
 const https = require('https');
 const { requireAuth } = require('../middleware/auth');
 
+const { ermittleOptionen, alsKiKontext, schwellenwertUebersicht } = require('../services/optionskatalog');
+const db = require('../db');
+const fs = require('fs');
+const path = require('path');
+
 const router = express.Router();
+
+// ─── Wissensbasis (Klartext-Karten) ─────────────────
+// Dateien unter server/wissen/karten/*.md werden beim Start geladen.
+const KARTEN_DIR = path.join(__dirname, '..', 'wissen', 'karten');
+function ladeWissenskarten() {
+  try {
+    return fs.readdirSync(KARTEN_DIR)
+      .filter(f => f.endsWith('.md'))
+      .sort()
+      .map(f => fs.readFileSync(path.join(KARTEN_DIR, f), 'utf8'))
+      .join('\n\n---\n\n');
+  } catch {
+    return '';
+  }
+}
+const WISSENSKARTEN = ladeWissenskarten();
 
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 const AI_MODEL = process.env.AI_MODEL || 'claude-sonnet-4-20250514';
@@ -29,33 +50,15 @@ Du verfügst über vertiefte Kenntnisse im deutschen und europäischen Vergabere
 - VSVgV (Vergabeverordnung für die Bereiche Verteidigung und Sicherheit)
 - Relevante Landesvergabegesetze
 
-## Schwellenwerte (Stand 2024/2025)
+## Schwellenwerte, Wertgrenzen und Verfahrenswahl
 
-- Bauleistungen: 5.538.000 € (netto)
-- Liefer- und Dienstleistungen (klassisch): 221.000 € (netto)
-- Liefer- und Dienstleistungen (Sektoren): 443.000 € (netto)
-- Konzessionen: 5.538.000 € (netto)
-- Freiberufliche Leistungen nach VgV: 221.000 € (netto)
-- Direktvergabe bis 1.000 € / Verhandlungsvergabe bis 15.000 € (variiert nach Landesrecht)
+Die aktuell gültigen Schwellenwerte, Landes-Wertgrenzen und die priorisierten Handlungsoptionen erhältst du unten aus der Wissensbasis und – bei einer konkreten Vergabe – im Block [OPTIONSKATALOG]. Verwende ausschließlich diese Werte, nicht dein Trainingswissen. Wertgrenzen unterhalb der EU-Schwelle sind Landes- bzw. Bundesrecht und unterscheiden sich je nach Auftraggeber.
 
-## Verfahrensarten
-
-Oberschwellig (VgV):
-- Offenes Verfahren (§ 15 VgV) — Regelverfahren
-- Nicht offenes Verfahren (§ 16 VgV) — mit Teilnahmewettbewerb
-- Verhandlungsverfahren (§ 17 VgV) — mit/ohne Teilnahmewettbewerb
-- Wettbewerblicher Dialog (§ 18 VgV) — für komplexe Projekte
-- Innovationspartnerschaft (§ 19 VgV)
-
-Unterschwellig (UVgO):
-- Direktauftrag (§ 14 UVgO) — bis 1.000 €
-- Verhandlungsvergabe (§ 12 UVgO) — bis 25.000 € (mit/ohne Teilnahmewettbewerb)
-- Öffentliche Ausschreibung (§ 9 UVgO) — Regelverfahren
-
-Bauleistungen (VOB/A):
-- Freihändige Vergabe — bis 10.000 €
-- Beschränkte Ausschreibung — bis 150.000 €
-- Öffentliche Ausschreibung — Regelverfahren
+Wenn ein [OPTIONSKATALOG] vorliegt:
+- Nenne zuerst die empfohlene Option und begründe sie in einem Satz.
+- Zeige Alternativen mit ihren Voraussetzungen und Risiken.
+- Weise auf offene Klärungsfragen hin, wenn deren Antwort die Empfehlung ändern würde.
+- Gib den Sicherheitsgrad an, wenn er nicht "gruen" ist (gelb = Einzelentscheidung/Sekundärquelle, rot = offen).
 
 ## Kommunikationsstil
 
@@ -64,6 +67,8 @@ Bauleistungen (VOB/A):
 - Unterscheide klar zwischen geltendem Recht, Rechtsprechung und eigener Einschätzung
 - Gib bei Unsicherheiten oder umstrittenen Rechtsfragen einen klaren Hinweis
 - Halte Antworten kompakt — fokussiere auf das Wesentliche
+- Schreibe verständlich für Sachbearbeitende ohne juristische Ausbildung: Fachbegriffe beim ersten Auftreten kurz erklären, am Ende die Rechtsgrundlage in einer Zeile
+- Keine Einzelfall-Rechtsberatung: bei hohem Auftragswert, Rügen oder Nachprüfungsverfahren auf qualifizierte Rechtsberatung hinweisen
 - Wenn du Formularfelder erklärst, sei besonders praxisnah
 - Erfinde niemals Aktenzeichen, Fundstellen oder Rechtsnormen
 
@@ -187,7 +192,30 @@ router.post('/chat', requireAuth, async (req, res) => {
   const recentMessages = messages.slice(-20);
 
   // Inject context as first user message if present
-  const contextMsg = buildContextMessage(context);
+  let contextMsg = buildContextMessage(context);
+
+  // Optionskatalog für die aktuelle Vergabe anhängen
+  const f = context?.formData || context?.vergabe;
+  if (f?.leistungsart) {
+    try {
+      let org = {};
+      if (req.user?.organisation_id) {
+        const { rows } = await db.query('SELECT bundesland, typ FROM organisationen WHERE id = $1', [req.user.organisation_id]);
+        org = rows[0] || {};
+      }
+      const optionen = ermittleOptionen({
+        leistungsart: f.leistungsart,
+        volumen: f.volumen_netto ? Number(f.volumen_netto) : null,
+        bundesland: org.bundesland,
+        orgTyp: org.typ,
+        merkmale: context.merkmale || {},
+      });
+      const katalogText = alsKiKontext(optionen);
+      if (katalogText) contextMsg = (contextMsg ? contextMsg + '\n\n' : '') + katalogText;
+    } catch (err) {
+      console.error('Optionskatalog für KI fehlgeschlagen:', err.message);
+    }
+  }
   const apiMessages = [...recentMessages];
   if (contextMsg && apiMessages.length > 0) {
     // Prepend context to the last user message
@@ -211,7 +239,11 @@ router.post('/chat', requireAuth, async (req, res) => {
   const requestBody = JSON.stringify({
     model: AI_MODEL,
     max_tokens: 2048,
-    system: SYSTEM_PROMPT,
+    system: [
+      SYSTEM_PROMPT,
+      '## Aktueller Rechtsstand\n' + schwellenwertUebersicht(),
+      WISSENSKARTEN ? '## Wissensbasis (Klartext-Karten)\n' + WISSENSKARTEN : '',
+    ].filter(Boolean).join('\n\n'),
     messages: apiMessages,
     stream: true,
   });

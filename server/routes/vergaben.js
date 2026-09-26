@@ -11,6 +11,7 @@ const express = require('express');
 const db = require('../db');
 const { requireAuth } = require('../middleware/auth');
 
+const { ermittleOptionen } = require('../services/optionskatalog');
 const router = express.Router();
 
 // ─── Freigabenkette berechnen ────────────────────
@@ -63,19 +64,18 @@ async function berechneFreigabenkette(client, vergabe, organisationId) {
 }
 
 // ─── Schwellenwert-Logik ─────────────────────────
-function berechneSchwellenwert(volumen, leistungsart) {
-  const schwellen = {
-    'Bauleistung': 5538000,
-    'Lieferleistung': 221000,
-    'Dienstleistung': 221000,
-    'Freiberufliche Leistung': 221000,
-    'Konzession': 5538000,
+// Schwellenwerte und Wertgrenzen kommen aus server/wissen/rechtsstand.json (über den Optionskatalog).
+function berechneSchwellenwert(volumen, leistungsart, org = {}) {
+  const o = ermittleOptionen({ leistungsart, volumen, bundesland: org.bundesland, orgTyp: org.typ });
+  const empfohlen = o.empfohlenesVerfahren;
+  const rechtsgrundlage = o.regime === 'eu'
+    ? (leistungsart === 'Bauleistung' ? 'VOB/A-EU' : leistungsart === 'Konzession' ? 'KonzVgV' : 'VgV')
+    : (leistungsart === 'Bauleistung' ? 'VOB/A' : 'UVgO');
+  return {
+    regime: o.regime,
+    verfahrensart: empfohlen?.titel ? empfohlen.titel.slice(0, 80) : null,
+    rechtsgrundlage: `${rechtsgrundlage} (Landesregeln: ${o.landesPack.name})`.slice(0, 100),
   };
-  const schwelle = schwellen[leistungsart] || 221000;
-
-  if (volumen <= 15000) return { regime: 'direkt', verfahrensart: 'Direktvergabe', rechtsgrundlage: 'UVgO § 14' };
-  if (volumen < schwelle) return { regime: 'national', verfahrensart: 'Öffentliche Ausschreibung', rechtsgrundlage: 'UVgO / VOB/A' };
-  return { regime: 'eu', verfahrensart: 'Offenes Verfahren', rechtsgrundlage: 'VgV' };
 }
 
 // ─── CRUD ────────────────────────────────────────
@@ -203,7 +203,12 @@ router.post('/', requireAuth, async (req, res) => {
     }
 
     // Schwellenwert berechnen
-    const schwelle = volumen_netto ? berechneSchwellenwert(parseFloat(volumen_netto), leistungsart) : {};
+    let org = {};
+    if (req.user.organisation_id) {
+      const orgRes = await client.query('SELECT bundesland, typ FROM organisationen WHERE id = $1', [req.user.organisation_id]);
+      org = orgRes.rows[0] || {};
+    }
+    const schwelle = volumen_netto ? berechneSchwellenwert(parseFloat(volumen_netto), leistungsart, org) : {};
 
     const { rows } = await client.query(`
       INSERT INTO vergaben (
