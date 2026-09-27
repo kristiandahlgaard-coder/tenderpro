@@ -117,7 +117,7 @@ router.get('/me', requireAuth, async (req, res) => {
     }
     res.json(result.rows[0]);
   } catch (err) {
-    console.error('Profil-Fehler:', err);
+    console.error('Profil-Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   }
 });

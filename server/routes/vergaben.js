@@ -15,7 +15,8 @@ const { ermittleOptionen } = require('../services/optionskatalog');
 const router = express.Router();
 
 // ─── Freigabenkette berechnen ────────────────────
-async function berechneFreigabenkette(client, vergabe, organisationId) {
+// ausgeschlosseneIds: Personen, die nicht freigeben dürfen (Ersteller, Bearbeiter, Einreichende)
+async function berechneFreigabenkette(client, vergabe, organisationId, ausgeschlosseneIds = []) {
   const { rows: regeln } = await client.query(
     `SELECT * FROM freigabe_regeln
      WHERE organisation_id = $1 AND aktiv = true
@@ -50,18 +51,20 @@ async function berechneFreigabenkette(client, vergabe, organisationId) {
 
   for (const glied of kette) {
     // Passenden User für diese Rolle finden
-    // Vier-Augen-Prinzip: Der Ersteller wird nie als eigener Freigeber eingesetzt.
+    // Vier-Augen-Prinzip: Wer die Vergabe erstellt, bearbeitet oder eingereicht hat, gibt sie nicht frei.
+    const ausgeschlossen = [...new Set([vergabe.ersteller_id, ...ausgeschlosseneIds].filter(Boolean))];
     const { rows: freigeber } = await client.query(
       `SELECT id FROM users
-       WHERE organisation_id = $1 AND rolle = $2 AND aktiv = true AND id <> $3
+       WHERE organisation_id = $1 AND rolle = $2 AND aktiv = true AND NOT (id = ANY($3::uuid[]))
        ORDER BY created_at LIMIT 1`,
-      [organisationId, glied.rolle, vergabe.ersteller_id]
+      [organisationId, glied.rolle, ausgeschlossen]
     );
+    glied.freigeber_id = freigeber[0]?.id || null;
 
     await client.query(
       `INSERT INTO freigabenkette (vergabe_id, stufe, rolle, reihenfolge, freigeber_id)
        VALUES ($1, $2, $3, $4, $5)`,
-      [vergabe.id, glied.stufe, glied.rolle, glied.reihenfolge, freigeber[0]?.id || null]
+      [vergabe.id, glied.stufe, glied.rolle, glied.reihenfolge, glied.freigeber_id]
     );
   }
 
@@ -136,7 +139,7 @@ router.get('/', requireAuth, async (req, res) => {
       total: parseInt(countResult.rows[0].count),
     });
   } catch (err) {
-    console.error('Vergaben-Liste Fehler:', err);
+    console.error('Vergaben-Liste Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   }
 });
@@ -190,7 +193,7 @@ router.get('/:id', requireAuth, async (req, res) => {
       formulare,
     });
   } catch (err) {
-    console.error('Vergabe-Detail Fehler:', err);
+    console.error('Vergabe-Detail Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   }
 });
@@ -210,6 +213,10 @@ router.post('/', requireAuth, async (req, res) => {
       risikobewertung, zusaetzliche_notizen, geplanter_start, projektbezeichnung,
     } = req.body;
 
+    if (!req.user.organisation_id) {
+      await client.query('ROLLBACK');
+      return res.status(403).json({ error: 'Ihr Konto ist keiner Organisation zugeordnet.' });
+    }
     if (!leistungsbeschreibung || !leistungsart) {
       await client.query('ROLLBACK');
       return res.status(400).json({ error: 'Leistungsbeschreibung und Leistungsart sind Pflichtfelder' });
@@ -282,7 +289,7 @@ router.post('/', requireAuth, async (req, res) => {
     res.status(201).json(vergabe);
   } catch (err) {
     await client.query('ROLLBACK');
-    console.error('Vergabe erstellen Fehler:', err);
+    console.error('Vergabe erstellen Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   } finally {
     client.release();
@@ -349,6 +356,15 @@ router.put('/:id', requireAuth, async (req, res) => {
     );
     if (rows.length === 0) return res.status(409).json({ error: 'Vergabe wurde zwischenzeitlich geändert' });
 
+    // Nachvollziehbarkeit: geänderte Felder, bei Volumen und Leistungsart mit altem und neuem Wert
+    const details = { felder: allowed.filter(k => k in fields) };
+    if ('volumen_netto' in fields) details.volumen_netto = { alt: bestehend.volumen_netto, neu: rows[0].volumen_netto };
+    if ('leistungsart' in fields) details.leistungsart = { alt: bestehend.leistungsart, neu: rows[0].leistungsart };
+    await db.query(
+      `INSERT INTO audit_log (vergabe_id, user_id, aktion, details) VALUES ($1, $2, 'vergabe_bearbeitet', $3)`,
+      [rows[0].id, req.user.id, JSON.stringify(details)]
+    );
+
     res.json(rows[0]);
   } catch (err) {
     console.error('Vergabe bearbeiten Fehler:', err.message);
@@ -375,9 +391,34 @@ router.post('/:id/submit', requireAuth, async (req, res) => {
       return res.status(403).json({ error: 'Keine Berechtigung, diesen Entwurf einzureichen' });
     }
 
+    if (entwurf[0].volumen_netto == null) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({ error: 'Bitte vor dem Einreichen das geschätzte Auftragsvolumen angeben.' });
+    }
+
+    // Wer den Entwurf bearbeitet hat, darf ihn nicht freigeben
+    const { rows: bearbeiter } = await client.query(
+      `SELECT DISTINCT user_id FROM audit_log WHERE vergabe_id = $1 AND aktion = 'vergabe_bearbeitet' AND user_id IS NOT NULL`,
+      [entwurf[0].id]
+    );
+    const ausgeschlossen = [req.user.id, ...bearbeiter.map(b => b.user_id)];
+
     // Freigabenkette aus den aktuellen Angaben neu aufbauen (Volumen kann sich seit dem Anlegen geändert haben)
     await client.query('DELETE FROM freigabenkette WHERE vergabe_id = $1', [entwurf[0].id]);
-    await berechneFreigabenkette(client, entwurf[0], req.user.organisation_id);
+    const kette = await berechneFreigabenkette(client, entwurf[0], req.user.organisation_id, ausgeschlossen);
+
+    if (kette.length === 0) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({ error: 'Für diese Vergabe greift keine Freigaberegel. Bitte die Freigaberegeln der Organisation prüfen.' });
+    }
+    const unbesetzt = kette.filter(g => !g.freigeber_id).map(g => g.rolle);
+    if (unbesetzt.length) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({
+        error: `Für folgende Freigabestufen ist keine weitere berechtigte Person vorhanden: ${[...new Set(unbesetzt)].join(', ')}. `
+          + 'Wer die Vergabe erstellt, bearbeitet oder einreicht, darf sie nicht selbst freigeben.',
+      });
+    }
 
     const { rows } = await client.query(
       `UPDATE vergaben SET status = 'in_freigabe', submitted_at = NOW(), updated_at = NOW()
@@ -395,7 +436,7 @@ router.post('/:id/submit', requireAuth, async (req, res) => {
     res.json(rows[0]);
   } catch (err) {
     await client.query('ROLLBACK');
-    console.error('Submit Fehler:', err);
+    console.error('Submit Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   } finally {
     client.release();
@@ -418,7 +459,7 @@ router.delete('/:id', requireAuth, async (req, res) => {
     }
     res.json({ deleted: true });
   } catch (err) {
-    console.error('Löschen Fehler:', err);
+    console.error('Löschen Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   }
 });

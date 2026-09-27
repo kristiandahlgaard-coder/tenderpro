@@ -25,6 +25,18 @@ const ENTSCHEIDBAR = `
     WHERE vor.vergabe_id = fk.vergabe_id AND vor.stufe < fk.stufe AND vor.status <> 'genehmigt'
   )`;
 
+// Vergabezeile sperren, damit parallele Entscheidungen (z.B. zwei Freigeber derselben Stufe,
+// Genehmigung und Ablehnung gleichzeitig) nacheinander und auf aktuellem Stand ablaufen.
+async function sperreVergabe(client, freigabeId, organisationId) {
+  await client.query(
+    `SELECT v.id FROM vergaben v
+     WHERE v.id = (SELECT vergabe_id FROM freigabenkette WHERE id = $1)
+       AND v.organisation_id = $2
+     FOR UPDATE`,
+    [freigabeId, organisationId]
+  );
+}
+
 // Meine offenen Freigaben
 router.get('/', requireAuth, async (req, res) => {
   try {
@@ -50,7 +62,7 @@ router.get('/', requireAuth, async (req, res) => {
 
     res.json(rows);
   } catch (err) {
-    console.error('Freigaben-Liste Fehler:', err);
+    console.error('Freigaben-Liste Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   }
 });
@@ -60,6 +72,7 @@ router.post('/:id/approve', requireAuth, async (req, res) => {
   const client = await db.getClient();
   try {
     await client.query('BEGIN');
+    await sperreVergabe(client, req.params.id, req.user.organisation_id);
 
     const { kommentar } = req.body;
 
@@ -106,7 +119,7 @@ router.post('/:id/approve', requireAuth, async (req, res) => {
     res.json({ status: 'genehmigt', alle_erteilt: parseInt(offene[0].count) === 0 });
   } catch (err) {
     await client.query('ROLLBACK');
-    console.error('Genehmigung Fehler:', err);
+    console.error('Genehmigung Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   } finally {
     client.release();
@@ -123,6 +136,7 @@ router.post('/:id/reject', requireAuth, async (req, res) => {
   const client = await db.getClient();
   try {
     await client.query('BEGIN');
+    await sperreVergabe(client, req.params.id, req.user.organisation_id);
 
     const { rows } = await client.query(
       `UPDATE freigabenkette fk
@@ -156,7 +170,7 @@ router.post('/:id/reject', requireAuth, async (req, res) => {
     res.json({ status: 'abgelehnt' });
   } catch (err) {
     await client.query('ROLLBACK');
-    console.error('Ablehnung Fehler:', err);
+    console.error('Ablehnung Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   } finally {
     client.release();
@@ -172,7 +186,7 @@ router.get('/regeln', requireAuth, requireRole('admin'), async (req, res) => {
     );
     res.json(rows);
   } catch (err) {
-    console.error('Regeln Fehler:', err);
+    console.error('Regeln Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   }
 });

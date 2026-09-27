@@ -6,8 +6,6 @@ import { useAuthStore } from '../stores/auth.js'
 const router = useRouter()
 const route = useRoute()
 const auth = useAuthStore()
-// Test-Zugänge nur in der lokalen Entwicklung anzeigen, nie im Produktivbetrieb
-const isDev = import.meta.env.DEV
 
 const email = ref('')
 const password = ref('')
@@ -71,11 +69,6 @@ async function handleLogin() {
         </button>
       </form>
 
-      <div v-if="isDev" class="login-hint">
-        <strong>Test-Zugänge:</strong><br>
-        admin@tenderpro.de / test123<br>
-        vergabe@tenderpro.de / test123
-      </div>
     </div>
   </div>
 </template>

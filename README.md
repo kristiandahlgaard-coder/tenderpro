@@ -68,7 +68,8 @@ In der lokalen Entwicklung legt `npm run db:seed` Testzugänge mit einem Entwick
 Im Produktivbetrieb (`NODE_ENV=production`) gilt:
 
 - `JWT_SECRET` muss gesetzt sein (mindestens 32 Zeichen), sonst startet der Server nicht.
-- Testzugänge erhalten das Passwort aus `TESTZUGANG_PASSWORT` (mindestens 12 Zeichen). Ist die Variable nicht gesetzt, werden sie deaktiviert.
+- `NODE_ENV=production` muss gesetzt sein – alle Schutzmaßnahmen hängen daran.
+- Testzugänge erhalten bei jedem Start das Passwort aus `TESTZUGANG_PASSWORT` (mindestens 12 Zeichen). Ist die Variable nicht gesetzt, werden sie deaktiviert. Der Admin-Testzugang ist im Produktivbetrieb immer deaktiviert.
 - Die Selbstregistrierung ist gesperrt (freischalten nur mit `ALLOW_REGISTRATION=true`).
 
 ## Funktionen

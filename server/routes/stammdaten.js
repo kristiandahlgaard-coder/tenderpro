@@ -28,7 +28,7 @@ router.get('/formulare/vorlagen', requireAuth, async (req, res) => {
     );
     res.json(rows);
   } catch (err) {
-    console.error('Formulare Fehler:', err);
+    console.error('Formulare Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   }
 });
@@ -77,7 +77,7 @@ router.get('/dashboard/stats', requireAuth, async (req, res) => {
       offene_freigaben: statusMap.in_freigabe || 0,
     });
   } catch (err) {
-    console.error('Dashboard Fehler:', err);
+    console.error('Dashboard Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   }
 });
@@ -95,7 +95,7 @@ router.get('/audit/:vergabe_id', requireAuth, async (req, res) => {
     `, [req.params.vergabe_id, req.user.organisation_id]);
     res.json(rows);
   } catch (err) {
-    console.error('Audit Fehler:', err);
+    console.error('Audit Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   }
 });
