@@ -23,3 +23,12 @@ Vergabeplattform für öffentliche Auftraggeber (Node/Express + Vue 3, PostgreSQ
 ## Nützliche Befehle
 - Szenario testen: `node -e "console.log(require('./server/services/optionskatalog').ermittleOptionen({leistungsart:'Dienstleistung',volumen:150000,bundesland:'Berlin'}).empfohlenesVerfahren)"`
 - Frontend bauen: `cd client && npx vite build`
+
+## Agenten (`.claude/agents/`)
+Ablauf für Rechtsänderungen – immer auf einem eigenen Branch, nie direkt auf `main`:
+1. **chandler** – recherchiert und schreibt `docs/rechtsupdates/JJJJ-MM-TT.md` (ändert keine Plattform-Dateien)
+2. **monica** – überträgt den belegten Änderungsbedarf in `server/wissen/` und führt die Checks aus
+3. **joey** – macht Nutzer-Texte verständlich, ohne rechtliche Inhalte zu ändern
+4. **ross** – prüft alles unabhängig gegen die Quellen; nur bei „FREIGEGEBEN" wird der Pull Request zum Zusammenführen empfohlen
+
+Zusammengeführt wird ausschließlich durch Kristian per Pull Request.
