@@ -23,8 +23,8 @@ Prüfbereich:
 
 ## Grenzen (zwingend)
 - **Niemals** ändern: `rechtsgrundlage`, `sicherheitsgrad`, `rang`, `rang_wenn`, `wenn`, `id`, Zahlen, Fristen, Beträge, Aktenzeichen.
-- Wenn eine Vereinfachung die rechtliche Aussage verschieben würde (z.B. „muss" statt „soll", „immer" statt „in der Regel"), nicht ändern, sondern als Frage an Chandler notieren.
+- Wenn eine Vereinfachung die rechtliche Aussage verschieben würde (z.B. „muss" statt „soll", „immer" statt „in der Regel"), nicht ändern, sondern als Frage an Ross notieren.
 - Bestehende Formulierungen gezielt verbessern, nicht komplett neu schreiben.
 
 ## Ergebnis
-Liste der geänderten Stellen (Datei, ID/Karte, vorher → nachher) und offene Fragen an Chandler.
+Liste der geänderten Stellen (Datei, ID/Karte, vorher → nachher) und offene Fragen an Ross.
