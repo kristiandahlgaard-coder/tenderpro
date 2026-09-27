@@ -44,8 +44,8 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_users_org ON users(organisation_id);
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_org ON users(organisation_id);
 
 -- ───────────────────────────────────────────────────
 -- 2. VERGABEN (Kernentität)
@@ -127,9 +127,9 @@ CREATE TABLE IF NOT EXISTS vergaben (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX idx_vergaben_org ON vergaben(organisation_id);
-CREATE INDEX idx_vergaben_status ON vergaben(status);
-CREATE INDEX idx_vergaben_ersteller ON vergaben(ersteller_id);
+CREATE INDEX IF NOT EXISTS idx_vergaben_org ON vergaben(organisation_id);
+CREATE INDEX IF NOT EXISTS idx_vergaben_status ON vergaben(status);
+CREATE INDEX IF NOT EXISTS idx_vergaben_ersteller ON vergaben(ersteller_id);
 
 -- Automatische Vergabenummer
 CREATE OR REPLACE FUNCTION generate_vergabenummer()
@@ -151,6 +151,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trg_vergabenummer ON vergaben;
 CREATE TRIGGER trg_vergabenummer
   BEFORE INSERT ON vergaben
   FOR EACH ROW
@@ -186,7 +187,7 @@ CREATE TABLE IF NOT EXISTS freigabe_regeln (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX idx_freigabe_regeln_org ON freigabe_regeln(organisation_id);
+CREATE INDEX IF NOT EXISTS idx_freigabe_regeln_org ON freigabe_regeln(organisation_id);
 
 -- Berechnete Freigabenkette pro Vergabe
 CREATE TABLE IF NOT EXISTS freigabenkette (
@@ -206,7 +207,7 @@ CREATE TABLE IF NOT EXISTS freigabenkette (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX idx_freigabenkette_vergabe ON freigabenkette(vergabe_id);
+CREATE INDEX IF NOT EXISTS idx_freigabenkette_vergabe ON freigabenkette(vergabe_id);
 
 -- ───────────────────────────────────────────────────
 -- 4. FORMULARE
@@ -243,7 +244,7 @@ CREATE TABLE IF NOT EXISTS vergabe_formulare (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX idx_vergabe_formulare_vergabe ON vergabe_formulare(vergabe_id);
+CREATE INDEX IF NOT EXISTS idx_vergabe_formulare_vergabe ON vergabe_formulare(vergabe_id);
 
 -- ───────────────────────────────────────────────────
 -- 5. FRISTEN & TERMINE
@@ -266,8 +267,8 @@ CREATE TABLE IF NOT EXISTS vergabe_fristen (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX idx_fristen_vergabe ON vergabe_fristen(vergabe_id);
-CREATE INDEX idx_fristen_datum ON vergabe_fristen(frist_datum);
+CREATE INDEX IF NOT EXISTS idx_fristen_vergabe ON vergabe_fristen(vergabe_id);
+CREATE INDEX IF NOT EXISTS idx_fristen_datum ON vergabe_fristen(frist_datum);
 
 -- ───────────────────────────────────────────────────
 -- 6. KOMMUNIKATION (Bieterfragen)
@@ -293,7 +294,7 @@ CREATE TABLE IF NOT EXISTS kommunikation (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX idx_kommunikation_vergabe ON kommunikation(vergabe_id);
+CREATE INDEX IF NOT EXISTS idx_kommunikation_vergabe ON kommunikation(vergabe_id);
 
 -- ───────────────────────────────────────────────────
 -- 7. VERGABEAKTE (Dokumentation)
@@ -319,7 +320,7 @@ CREATE TABLE IF NOT EXISTS vergabeakte (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX idx_vergabeakte_vergabe ON vergabeakte(vergabe_id);
+CREATE INDEX IF NOT EXISTS idx_vergabeakte_vergabe ON vergabeakte(vergabe_id);
 
 -- ───────────────────────────────────────────────────
 -- 8. AUDIT-LOG
@@ -338,8 +339,8 @@ CREATE TABLE IF NOT EXISTS audit_log (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX idx_audit_vergabe ON audit_log(vergabe_id);
-CREATE INDEX idx_audit_created ON audit_log(created_at);
+CREATE INDEX IF NOT EXISTS idx_audit_vergabe ON audit_log(vergabe_id);
+CREATE INDEX IF NOT EXISTS idx_audit_created ON audit_log(created_at);
 
 -- ───────────────────────────────────────────────────
 -- 9. DATEIANHÄNGE
@@ -359,7 +360,7 @@ CREATE TABLE IF NOT EXISTS anhaenge (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX idx_anhaenge_vergabe ON anhaenge(vergabe_id);
+CREATE INDEX IF NOT EXISTS idx_anhaenge_vergabe ON anhaenge(vergabe_id);
 
 -- ───────────────────────────────────────────────────
 -- 10. ADRESSDATENBANK (Unternehmen)
@@ -390,7 +391,7 @@ CREATE TABLE IF NOT EXISTS unternehmen (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX idx_unternehmen_org ON unternehmen(organisation_id);
+CREATE INDEX IF NOT EXISTS idx_unternehmen_org ON unternehmen(organisation_id);
 
 -- ───────────────────────────────────────────────────
 -- Updated-At Trigger
@@ -404,11 +405,15 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trg_users_updated ON users;
 CREATE TRIGGER trg_users_updated BEFORE UPDATE ON users
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS trg_vergaben_updated ON vergaben;
 CREATE TRIGGER trg_vergaben_updated BEFORE UPDATE ON vergaben
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS trg_organisationen_updated ON organisationen;
 CREATE TRIGGER trg_organisationen_updated BEFORE UPDATE ON organisationen
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS trg_unternehmen_updated ON unternehmen;
 CREATE TRIGGER trg_unternehmen_updated BEFORE UPDATE ON unternehmen
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();

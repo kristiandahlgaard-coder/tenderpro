@@ -17,19 +17,22 @@ async function seed() {
     const client = await pool.connect();
     console.log('🌱 Erstelle Testdaten...');
 
-    // 1. Organisation
-    const orgResult = await client.query(`
-      INSERT INTO organisationen (name, typ, ort, bundesland)
-      VALUES ('Muster-Vergabestelle', 'klassisch', 'Berlin', 'Berlin')
-      ON CONFLICT DO NOTHING
-      RETURNING id
-    `);
-    const orgId = orgResult.rows[0]?.id;
-    if (!orgId) {
+    // Nur einmal ausführen: existieren bereits Benutzer, gibt es nichts zu tun.
+    // (organisationen hat keinen Unique-Key, ON CONFLICT greift dort nicht.)
+    const vorhanden = await client.query('SELECT 1 FROM users LIMIT 1');
+    if (vorhanden.rows.length > 0) {
       console.log('ℹ️  Testdaten existieren bereits.');
       client.release();
       return;
     }
+
+    // 1. Organisation
+    const orgResult = await client.query(`
+      INSERT INTO organisationen (name, typ, ort, bundesland)
+      VALUES ('Muster-Vergabestelle', 'klassisch', 'Berlin', 'Berlin')
+      RETURNING id
+    `);
+    const orgId = orgResult.rows[0].id;
 
     // 2. Benutzer
     const hash = await bcrypt.hash('test123', 10);
