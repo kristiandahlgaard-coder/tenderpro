@@ -64,15 +64,12 @@ DATABASE_URL="deine-neon-url" npm run db:seed
 
 ## Test-Zugänge
 
-| E-Mail | Passwort | Rolle |
-|--------|----------|-------|
-| admin@tenderpro.de | test123 | Admin |
-| vergabe@tenderpro.de | test123 | Vergabestelle |
-| finanzen@tenderpro.de | test123 | Finanzen |
-| recht@tenderpro.de | test123 | Recht |
-| bereichsleitung@tenderpro.de | test123 | Bereichsleitung |
-| gf@tenderpro.de | test123 | Geschäftsführung |
-| beantragend@tenderpro.de | test123 | Beantragend |
+In der lokalen Entwicklung legt `npm run db:seed` Testzugänge mit einem Entwicklungspasswort an.
+Im Produktivbetrieb (`NODE_ENV=production`) gilt:
+
+- `JWT_SECRET` muss gesetzt sein (mindestens 32 Zeichen), sonst startet der Server nicht.
+- Testzugänge erhalten das Passwort aus `TESTZUGANG_PASSWORT` (mindestens 12 Zeichen). Ist die Variable nicht gesetzt, werden sie deaktiviert.
+- Die Selbstregistrierung ist gesperrt (freischalten nur mit `ALLOW_REGISTRATION=true`).
 
 ## Funktionen
 

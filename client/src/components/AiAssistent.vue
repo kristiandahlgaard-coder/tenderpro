@@ -180,9 +180,19 @@ onMounted(() => document.addEventListener('keydown', onGlobalKeydown))
 onUnmounted(() => document.removeEventListener('keydown', onGlobalKeydown))
 
 // Simple markdown-to-html for assistant messages
+// Zuerst HTML maskieren, damit Text aus der KI-Antwort nie als HTML/Skript ausgeführt wird
+function escapeHtml(text) {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 function renderMarkdown(text) {
   if (!text) return ''
-  return text
+  return escapeHtml(text)
     // Code blocks
     .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
     // Inline code

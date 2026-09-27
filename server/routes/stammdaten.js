@@ -88,10 +88,11 @@ router.get('/audit/:vergabe_id', requireAuth, async (req, res) => {
     const { rows } = await db.query(`
       SELECT al.*, u.vorname || ' ' || u.nachname as user_name
       FROM audit_log al
+      JOIN vergaben v ON v.id = al.vergabe_id
       LEFT JOIN users u ON al.user_id = u.id
-      WHERE al.vergabe_id = $1
+      WHERE al.vergabe_id = $1 AND v.organisation_id = $2
       ORDER BY al.created_at DESC
-    `, [req.params.vergabe_id]);
+    `, [req.params.vergabe_id, req.user.organisation_id]);
     res.json(rows);
   } catch (err) {
     console.error('Audit Fehler:', err);

@@ -13,12 +13,14 @@ const PORT = process.env.PORT || 8080;
 // ─── Middleware ───────────────────────────────────
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? true  // Allow same-origin (Vue served from same server)
-    : [process.env.CLIENT_URL || 'http://localhost:5173'],
-  credentials: true,
-}));
+// Im Produktivbetrieb liefert der Server das Frontend selbst aus (gleiche Adresse) – CORS ist
+// dort nicht nötig und bleibt aus. Nur in der Entwicklung wird der Vite-Server zugelassen.
+if (process.env.NODE_ENV !== 'production') {
+  app.use(cors({
+    origin: [process.env.CLIENT_URL || 'http://localhost:5173'],
+    credentials: true,
+  }));
+}
 
 // ─── API Routes ──────────────────────────────────
 app.use('/api/auth', require('./routes/auth'));
@@ -54,7 +56,8 @@ if (process.env.NODE_ENV === 'production') {
 
 // ─── Error Handler ───────────────────────────────
 app.use((err, req, res, next) => {
-  console.error('Unbehandelter Fehler:', err);
+  // Nur die Meldung protokollieren – das Fehlerobjekt kann den Anfrageinhalt (z.B. Passwörter) enthalten
+  console.error('Unbehandelter Fehler:', err.message);
   res.status(500).json({ error: 'Interner Serverfehler' });
 });
 

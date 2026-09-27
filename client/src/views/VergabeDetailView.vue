@@ -389,7 +389,9 @@ function aktionLabel(a) {
         <!-- Freigabenkette -->
         <div v-if="activeTab === 'freigabe'" class="tab-panel">
           <div v-if="!vergabe.freigabenkette?.length" class="empty card">
-            Keine Freigabekette vorhanden.
+            {{ vergabe.status === 'entwurf'
+              ? 'Die Freigabekette wird beim Einreichen aus den dann gültigen Angaben berechnet.'
+              : 'Keine Freigabekette vorhanden.' }}
           </div>
           <div v-else class="approval-chain">
             <div

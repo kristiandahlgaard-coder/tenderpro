@@ -1,11 +1,67 @@
 /**
  * TenderPro — Seed Data
- * Erstellt Testdaten für Entwicklung.
+ * Erstellt Grunddaten (Muster-Organisation, Freigabe-Regeln, Formularvorlagen) und Testzugänge.
  * Usage: node server/sql/seed.js
+ *
+ * Sicherheit im Produktivbetrieb (NODE_ENV=production):
+ * - Testzugänge erhalten nie das öffentlich bekannte Entwicklungspasswort.
+ * - Ist TESTZUGANG_PASSWORT (mind. 12 Zeichen) gesetzt, bekommen sie dieses Passwort,
+ *   sonst werden sie deaktiviert.
+ * - Bereits bestehende Testzugänge mit dem Entwicklungspasswort werden bei jedem Start
+ *   entsprechend umgestellt.
  */
 require('dotenv').config();
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
+
+const IST_PRODUKTION = process.env.NODE_ENV === 'production';
+const ENTWICKLUNGS_PASSWORT = 'test123';
+
+const TESTZUGAENGE = [
+  ['admin@tenderpro.de', 'Admin', 'User', 'admin', 'IT'],
+  ['vergabe@tenderpro.de', 'Marie', 'Schmidt', 'vergabestelle', 'Vergabestelle'],
+  ['finanzen@tenderpro.de', 'Thomas', 'Müller', 'finanzen', 'Finanzen'],
+  ['recht@tenderpro.de', 'Sarah', 'Weber', 'recht', 'Rechtsabteilung'],
+  ['leitung@tenderpro.de', 'Klaus', 'Fischer', 'bereichsleitung', 'Bereichsleitung'],
+  ['gf@tenderpro.de', 'Eva', 'Hoffmann', 'geschaeftsfuehrung', 'Geschäftsführung'],
+  ['antrag@tenderpro.de', 'Jan', 'Becker', 'beantragend', 'Facility Management'],
+];
+
+function produktivPasswort() {
+  const pw = process.env.TESTZUGANG_PASSWORT;
+  if (!pw) return null;
+  if (pw.length < 12) {
+    console.warn('⚠️  TESTZUGANG_PASSWORT ist kürzer als 12 Zeichen und wird ignoriert.');
+    return null;
+  }
+  return pw;
+}
+
+// Bestehende Testzugänge mit dem Entwicklungspasswort im Produktivbetrieb absichern
+async function sichereTestzugaenge(client) {
+  const neuesPasswort = produktivPasswort();
+  const neuerHash = neuesPasswort ? await bcrypt.hash(neuesPasswort, 10) : null;
+  let umgestellt = 0;
+  let gesperrt = 0;
+
+  for (const [email] of TESTZUGAENGE) {
+    const { rows } = await client.query('SELECT id, password_hash, aktiv FROM users WHERE email = $1', [email]);
+    if (rows.length === 0) continue;
+    const nutztEntwicklungsPasswort = await bcrypt.compare(ENTWICKLUNGS_PASSWORT, rows[0].password_hash);
+    if (!nutztEntwicklungsPasswort) continue;
+
+    if (neuerHash) {
+      // Auch zuvor mangels Passwort gesperrte Testzugänge wieder freigeben
+      await client.query('UPDATE users SET password_hash = $1, aktiv = true WHERE id = $2', [neuerHash, rows[0].id]);
+      umgestellt++;
+    } else if (rows[0].aktiv) {
+      await client.query('UPDATE users SET aktiv = false WHERE id = $1', [rows[0].id]);
+      gesperrt++;
+    }
+  }
+  if (umgestellt) console.log(`🔒 ${umgestellt} Testzugänge auf TESTZUGANG_PASSWORT umgestellt.`);
+  if (gesperrt) console.log(`🔒 ${gesperrt} Testzugänge deaktiviert (TESTZUGANG_PASSWORT nicht gesetzt).`);
+}
 
 async function seed() {
   const pool = new Pool({
@@ -15,16 +71,20 @@ async function seed() {
 
   try {
     const client = await pool.connect();
-    console.log('🌱 Erstelle Testdaten...');
+
+    if (IST_PRODUKTION) {
+      await sichereTestzugaenge(client);
+    }
 
     // Nur einmal ausführen: existieren bereits Benutzer, gibt es nichts zu tun.
     // (organisationen hat keinen Unique-Key, ON CONFLICT greift dort nicht.)
     const vorhanden = await client.query('SELECT 1 FROM users LIMIT 1');
     if (vorhanden.rows.length > 0) {
-      console.log('ℹ️  Testdaten existieren bereits.');
+      console.log('ℹ️  Grunddaten existieren bereits.');
       client.release();
       return;
     }
+    console.log('🌱 Erstelle Grunddaten...');
 
     // 1. Organisation
     const orgResult = await client.query(`
@@ -34,23 +94,18 @@ async function seed() {
     `);
     const orgId = orgResult.rows[0].id;
 
-    // 2. Benutzer
-    const hash = await bcrypt.hash('test123', 10);
-    const users = [
-      ['admin@tenderpro.de', 'Admin', 'User', 'admin', 'IT'],
-      ['vergabe@tenderpro.de', 'Marie', 'Schmidt', 'vergabestelle', 'Vergabestelle'],
-      ['finanzen@tenderpro.de', 'Thomas', 'Müller', 'finanzen', 'Finanzen'],
-      ['recht@tenderpro.de', 'Sarah', 'Weber', 'recht', 'Rechtsabteilung'],
-      ['leitung@tenderpro.de', 'Klaus', 'Fischer', 'bereichsleitung', 'Bereichsleitung'],
-      ['gf@tenderpro.de', 'Eva', 'Hoffmann', 'geschaeftsfuehrung', 'Geschäftsführung'],
-      ['antrag@tenderpro.de', 'Jan', 'Becker', 'beantragend', 'Facility Management'],
-    ];
+    // 2. Benutzer (Testzugänge)
+    const passwort = IST_PRODUKTION ? produktivPasswort() : ENTWICKLUNGS_PASSWORT;
+    const aktiv = !!passwort;
+    // Ohne Passwort (Produktivbetrieb ohne TESTZUGANG_PASSWORT) werden die Konten deaktiviert angelegt.
+    const hash = await bcrypt.hash(passwort || require('crypto').randomBytes(32).toString('hex'), 10);
+    const users = TESTZUGAENGE;
 
     for (const [email, vorname, nachname, rolle, abt] of users) {
       await client.query(`
-        INSERT INTO users (organisation_id, email, password_hash, vorname, nachname, rolle, abteilung)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
-      `, [orgId, email, hash, vorname, nachname, rolle, abt]);
+        INSERT INTO users (organisation_id, email, password_hash, vorname, nachname, rolle, abteilung, aktiv)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      `, [orgId, email, hash, vorname, nachname, rolle, abt, aktiv]);
     }
 
     // 3. Freigabe-Regeln
@@ -100,9 +155,9 @@ async function seed() {
       `, [name, kat, phase, pflicht, regime, la]);
     }
 
-    console.log('✅ Testdaten erstellt:');
+    console.log('✅ Grunddaten erstellt:');
     console.log(`   - 1 Organisation`);
-    console.log(`   - ${users.length} Benutzer (Passwort: test123)`);
+    console.log(`   - ${users.length} Testzugänge (${aktiv ? 'aktiv' : 'deaktiviert'})`);
     console.log(`   - ${regeln.length} Freigabe-Regeln`);
     console.log(`   - ${formulare.length} Formularvorlagen`);
 
