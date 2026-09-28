@@ -8,4 +8,4 @@
 - Kurz gesagt: Grundsätzlich nein. Nur wenn eine neutrale Ausschreibung einen unverhältnismäßigen Mehraufwand verursachen würde, und das müssen Sie mit konkreten Zahlen belegen.
 - Was heißt das? Der Hinweis „wir haben schon Geräte von Hersteller X" oder „es könnte Kompatibilitätsprobleme geben" reicht nicht. Rechnen Sie die Umstellungskosten konkret aus, prüfen Sie einen Mischbetrieb als Alternative und halten Sie beides im Vergabevermerk fest. Andernfalls kann das Verfahren in den Stand vor Bekanntmachung zurückversetzt werden.
 - Rechtsgrundlage: § 31 Abs. 6 VgV; OLG Düsseldorf, 02.09.2026 – VII-Verg 38/25
-- Sicherheitsgrad: 🟢
+- Sicherheitsgrad: 🟡 (obergerichtliche Einzelentscheidung, noch nicht wiederholt oder höchstrichterlich bestätigt – konsistent mit `EP-05-IT.sicherheitsgrad`)
