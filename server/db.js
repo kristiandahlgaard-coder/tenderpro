@@ -12,7 +12,7 @@ const pool = new Pool({
 });
 
 pool.on('error', (err) => {
-  console.error('Unerwarteter Datenbankfehler:', err);
+  console.error('Unerwarteter Datenbankfehler:', err.message);
 });
 
 module.exports = {

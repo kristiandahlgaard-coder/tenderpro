@@ -56,17 +56,26 @@ router.post('/login', async (req, res) => {
       }
     });
   } catch (err) {
-    console.error('Login-Fehler:', err);
+    console.error('Login-Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   }
 });
 
-// Registrierung (vereinfacht — für MVP)
+// Registrierung
+// Im Produktivbetrieb gesperrt (Konten legt die Administration an), außer ALLOW_REGISTRATION=true.
+// Eine Organisation kann bei der Selbstregistrierung nie gewählt werden – sonst könnte jeder
+// einer fremden Organisation beitreten und deren Vergaben einsehen.
 router.post('/register', async (req, res) => {
+  if (process.env.NODE_ENV === 'production' && process.env.ALLOW_REGISTRATION !== 'true') {
+    return res.status(403).json({ error: 'Registrierung ist deaktiviert. Bitte wenden Sie sich an Ihre Administration.' });
+  }
   try {
-    const { email, password, vorname, nachname, organisation_id } = req.body;
+    const { email, password, vorname, nachname } = req.body;
     if (!email || !password || !vorname || !nachname) {
       return res.status(400).json({ error: 'Alle Pflichtfelder ausfüllen' });
+    }
+    if (String(password).length < 12) {
+      return res.status(400).json({ error: 'Das Passwort muss mindestens 12 Zeichen lang sein.' });
     }
 
     const exists = await db.query('SELECT id FROM users WHERE email = $1', [email.toLowerCase()]);
@@ -77,9 +86,9 @@ router.post('/register', async (req, res) => {
     const hash = await bcrypt.hash(password, 10);
     const result = await db.query(
       `INSERT INTO users (email, password_hash, vorname, nachname, organisation_id, rolle)
-       VALUES ($1, $2, $3, $4, $5, 'beantragend')
+       VALUES ($1, $2, $3, $4, NULL, 'beantragend')
        RETURNING id, email, vorname, nachname, rolle`,
-      [email.toLowerCase(), hash, vorname, nachname, organisation_id || null]
+      [email.toLowerCase(), hash, vorname, nachname]
     );
 
     const user = result.rows[0];
@@ -87,7 +96,7 @@ router.post('/register', async (req, res) => {
 
     res.status(201).json({ token, user });
   } catch (err) {
-    console.error('Registrierung-Fehler:', err);
+    console.error('Registrierung-Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   }
 });
@@ -108,7 +117,7 @@ router.get('/me', requireAuth, async (req, res) => {
     }
     res.json(result.rows[0]);
   } catch (err) {
-    console.error('Profil-Fehler:', err);
+    console.error('Profil-Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   }
 });

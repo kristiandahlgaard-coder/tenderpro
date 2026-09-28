@@ -15,7 +15,8 @@ const { ermittleOptionen } = require('../services/optionskatalog');
 const router = express.Router();
 
 // ─── Freigabenkette berechnen ────────────────────
-async function berechneFreigabenkette(client, vergabe, organisationId) {
+// ausgeschlosseneIds: Personen, die nicht freigeben dürfen (Ersteller, Bearbeiter, Einreichende)
+async function berechneFreigabenkette(client, vergabe, organisationId, ausgeschlosseneIds = []) {
   const { rows: regeln } = await client.query(
     `SELECT * FROM freigabe_regeln
      WHERE organisation_id = $1 AND aktiv = true
@@ -24,11 +25,13 @@ async function berechneFreigabenkette(client, vergabe, organisationId) {
   );
 
   const matchingRoles = new Map();
+  // PostgreSQL liefert DECIMAL-Werte als Text – ohne Umwandlung würde "8000.00" > "100000.00" gelten
+  const volumen = vergabe.volumen_netto == null ? null : Number(vergabe.volumen_netto);
 
   for (const regel of regeln) {
     // Bedingungen prüfen
-    if (regel.bedingung_volumen_min !== null && vergabe.volumen_netto < regel.bedingung_volumen_min) continue;
-    if (regel.bedingung_volumen_max !== null && vergabe.volumen_netto > regel.bedingung_volumen_max) continue;
+    if (regel.bedingung_volumen_min !== null && (volumen == null || volumen < Number(regel.bedingung_volumen_min))) continue;
+    if (regel.bedingung_volumen_max !== null && (volumen == null || volumen > Number(regel.bedingung_volumen_max))) continue;
     if (regel.bedingung_leistungsart && vergabe.leistungsart !== regel.bedingung_leistungsart) continue;
     if (regel.bedingung_struktur && vergabe.struktur !== regel.bedingung_struktur) continue;
     if (regel.bedingung_schwellenwert && vergabe.schwellenwert_regime !== regel.bedingung_schwellenwert) continue;
@@ -48,19 +51,31 @@ async function berechneFreigabenkette(client, vergabe, organisationId) {
 
   for (const glied of kette) {
     // Passenden User für diese Rolle finden
+    // Vier-Augen-Prinzip: Wer die Vergabe erstellt, bearbeitet oder eingereicht hat, gibt sie nicht frei.
+    const ausgeschlossen = [...new Set([vergabe.ersteller_id, ...ausgeschlosseneIds].filter(Boolean))];
     const { rows: freigeber } = await client.query(
-      `SELECT id FROM users WHERE organisation_id = $1 AND rolle = $2 AND aktiv = true LIMIT 1`,
-      [organisationId, glied.rolle]
+      `SELECT id FROM users
+       WHERE organisation_id = $1 AND rolle = $2 AND aktiv = true AND NOT (id = ANY($3::uuid[]))
+       ORDER BY created_at LIMIT 1`,
+      [organisationId, glied.rolle, ausgeschlossen]
     );
+    glied.freigeber_id = freigeber[0]?.id || null;
 
     await client.query(
       `INSERT INTO freigabenkette (vergabe_id, stufe, rolle, reihenfolge, freigeber_id)
        VALUES ($1, $2, $3, $4, $5)`,
-      [vergabe.id, glied.stufe, glied.rolle, glied.reihenfolge, freigeber[0]?.id || null]
+      [vergabe.id, glied.stufe, glied.rolle, glied.reihenfolge, glied.freigeber_id]
     );
   }
 
   return kette;
+}
+
+// ─── Berechtigung für Entwürfe ───────────────────
+// Bearbeiten, Einreichen und Löschen darf der Ersteller oder die Vergabestelle/Administration.
+const ENTWURF_ROLLEN = ['vergabestelle', 'admin'];
+function darfEntwurfBearbeiten(user, vergabe) {
+  return vergabe.ersteller_id === user.id || ENTWURF_ROLLEN.includes(user.rolle);
 }
 
 // ─── Schwellenwert-Logik ─────────────────────────
@@ -124,7 +139,7 @@ router.get('/', requireAuth, async (req, res) => {
       total: parseInt(countResult.rows[0].count),
     });
   } catch (err) {
-    console.error('Vergaben-Liste Fehler:', err);
+    console.error('Vergaben-Liste Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   }
 });
@@ -178,7 +193,7 @@ router.get('/:id', requireAuth, async (req, res) => {
       formulare,
     });
   } catch (err) {
-    console.error('Vergabe-Detail Fehler:', err);
+    console.error('Vergabe-Detail Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   }
 });
@@ -198,7 +213,12 @@ router.post('/', requireAuth, async (req, res) => {
       risikobewertung, zusaetzliche_notizen, geplanter_start, projektbezeichnung,
     } = req.body;
 
+    if (!req.user.organisation_id) {
+      await client.query('ROLLBACK');
+      return res.status(403).json({ error: 'Ihr Konto ist keiner Organisation zugeordnet.' });
+    }
     if (!leistungsbeschreibung || !leistungsart) {
+      await client.query('ROLLBACK');
       return res.status(400).json({ error: 'Leistungsbeschreibung und Leistungsart sind Pflichtfelder' });
     }
 
@@ -239,10 +259,7 @@ router.post('/', requireAuth, async (req, res) => {
 
     const vergabe = rows[0];
 
-    // Freigabenkette berechnen
-    if (req.user.organisation_id) {
-      await berechneFreigabenkette(client, vergabe, req.user.organisation_id);
-    }
+    // Die Freigabenkette wird erst beim Einreichen aus den dann gültigen Angaben berechnet.
 
     // Passende Formulare zuweisen
     const { rows: vorlagen } = await client.query(`
@@ -272,7 +289,7 @@ router.post('/', requireAuth, async (req, res) => {
     res.status(201).json(vergabe);
   } catch (err) {
     await client.query('ROLLBACK');
-    console.error('Vergabe erstellen Fehler:', err);
+    console.error('Vergabe erstellen Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   } finally {
     client.release();
@@ -282,14 +299,18 @@ router.post('/', requireAuth, async (req, res) => {
 // Bearbeiten
 router.put('/:id', requireAuth, async (req, res) => {
   try {
-    // Nur Entwürfe bearbeiten
+    // Nur Entwürfe der eigenen Organisation
     const check = await db.query(
-      'SELECT status FROM vergaben WHERE id = $1 AND organisation_id = $2',
+      'SELECT status, ersteller_id, volumen_netto, leistungsart FROM vergaben WHERE id = $1 AND organisation_id = $2',
       [req.params.id, req.user.organisation_id]
     );
     if (check.rows.length === 0) return res.status(404).json({ error: 'Nicht gefunden' });
-    if (check.rows[0].status !== 'entwurf') {
+    const bestehend = check.rows[0];
+    if (bestehend.status !== 'entwurf') {
       return res.status(400).json({ error: 'Nur Entwürfe können bearbeitet werden' });
+    }
+    if (!darfEntwurfBearbeiten(req.user, bestehend)) {
+      return res.status(403).json({ error: 'Keine Berechtigung, diesen Entwurf zu bearbeiten' });
     }
 
     const fields = req.body;
@@ -313,15 +334,40 @@ router.put('/:id', requireAuth, async (req, res) => {
 
     if (sets.length === 0) return res.status(400).json({ error: 'Keine Änderungen' });
 
-    vals.push(req.params.id);
+    // Ändern sich Volumen oder Leistungsart, werden Regime und Verfahren neu berechnet
+    if ('volumen_netto' in fields || 'leistungsart' in fields) {
+      const volumen = 'volumen_netto' in fields ? fields.volumen_netto : bestehend.volumen_netto;
+      const leistungsart = 'leistungsart' in fields ? fields.leistungsart : bestehend.leistungsart;
+      let org = {};
+      const orgRes = await db.query('SELECT bundesland, typ FROM organisationen WHERE id = $1', [req.user.organisation_id]);
+      org = orgRes.rows[0] || {};
+      const schwelle = volumen ? berechneSchwellenwert(parseFloat(volumen), leistungsart, org) : {};
+      sets.push(`schwellenwert_regime = $${idx++}`); vals.push(schwelle.regime || null);
+      sets.push(`verfahrensart = $${idx++}`); vals.push(schwelle.verfahrensart || null);
+      sets.push(`rechtsgrundlage = $${idx++}`); vals.push(schwelle.rechtsgrundlage || null);
+    }
+
+    vals.push(req.params.id, req.user.organisation_id);
     const { rows } = await db.query(
-      `UPDATE vergaben SET ${sets.join(', ')}, updated_at = NOW() WHERE id = $${idx} RETURNING *`,
+      `UPDATE vergaben SET ${sets.join(', ')}, updated_at = NOW()
+       WHERE id = $${idx} AND organisation_id = $${idx + 1} AND status = 'entwurf'
+       RETURNING *`,
       vals
+    );
+    if (rows.length === 0) return res.status(409).json({ error: 'Vergabe wurde zwischenzeitlich geändert' });
+
+    // Nachvollziehbarkeit: geänderte Felder, bei Volumen und Leistungsart mit altem und neuem Wert
+    const details = { felder: allowed.filter(k => k in fields) };
+    if ('volumen_netto' in fields) details.volumen_netto = { alt: bestehend.volumen_netto, neu: rows[0].volumen_netto };
+    if ('leistungsart' in fields) details.leistungsart = { alt: bestehend.leistungsart, neu: rows[0].leistungsart };
+    await db.query(
+      `INSERT INTO audit_log (vergabe_id, user_id, aktion, details) VALUES ($1, $2, 'vergabe_bearbeitet', $3)`,
+      [rows[0].id, req.user.id, JSON.stringify(details)]
     );
 
     res.json(rows[0]);
   } catch (err) {
-    console.error('Vergabe bearbeiten Fehler:', err);
+    console.error('Vergabe bearbeiten Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   }
 });
@@ -332,16 +378,53 @@ router.post('/:id/submit', requireAuth, async (req, res) => {
   try {
     await client.query('BEGIN');
 
-    const { rows } = await client.query(
-      `UPDATE vergaben SET status = 'in_freigabe', submitted_at = NOW(), updated_at = NOW()
-       WHERE id = $1 AND organisation_id = $2 AND status = 'entwurf'
-       RETURNING *`,
+    const { rows: entwurf } = await client.query(
+      `SELECT * FROM vergaben WHERE id = $1 AND organisation_id = $2 AND status = 'entwurf' FOR UPDATE`,
       [req.params.id, req.user.organisation_id]
     );
-
-    if (rows.length === 0) {
+    if (entwurf.length === 0) {
+      await client.query('ROLLBACK');
       return res.status(400).json({ error: 'Vergabe nicht gefunden oder nicht im Entwurf-Status' });
     }
+    if (!darfEntwurfBearbeiten(req.user, entwurf[0])) {
+      await client.query('ROLLBACK');
+      return res.status(403).json({ error: 'Keine Berechtigung, diesen Entwurf einzureichen' });
+    }
+
+    if (entwurf[0].volumen_netto == null) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({ error: 'Bitte vor dem Einreichen das geschätzte Auftragsvolumen angeben.' });
+    }
+
+    // Wer den Entwurf bearbeitet hat, darf ihn nicht freigeben
+    const { rows: bearbeiter } = await client.query(
+      `SELECT DISTINCT user_id FROM audit_log WHERE vergabe_id = $1 AND aktion = 'vergabe_bearbeitet' AND user_id IS NOT NULL`,
+      [entwurf[0].id]
+    );
+    const ausgeschlossen = [req.user.id, ...bearbeiter.map(b => b.user_id)];
+
+    // Freigabenkette aus den aktuellen Angaben neu aufbauen (Volumen kann sich seit dem Anlegen geändert haben)
+    await client.query('DELETE FROM freigabenkette WHERE vergabe_id = $1', [entwurf[0].id]);
+    const kette = await berechneFreigabenkette(client, entwurf[0], req.user.organisation_id, ausgeschlossen);
+
+    if (kette.length === 0) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({ error: 'Für diese Vergabe greift keine Freigaberegel. Bitte die Freigaberegeln der Organisation prüfen.' });
+    }
+    const unbesetzt = kette.filter(g => !g.freigeber_id).map(g => g.rolle);
+    if (unbesetzt.length) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({
+        error: `Für folgende Freigabestufen ist keine weitere berechtigte Person vorhanden: ${[...new Set(unbesetzt)].join(', ')}. `
+          + 'Wer die Vergabe erstellt, bearbeitet oder einreicht, darf sie nicht selbst freigeben.',
+      });
+    }
+
+    const { rows } = await client.query(
+      `UPDATE vergaben SET status = 'in_freigabe', submitted_at = NOW(), updated_at = NOW()
+       WHERE id = $1 RETURNING *`,
+      [entwurf[0].id]
+    );
 
     await client.query(
       `INSERT INTO audit_log (vergabe_id, user_id, aktion, details)
@@ -353,7 +436,7 @@ router.post('/:id/submit', requireAuth, async (req, res) => {
     res.json(rows[0]);
   } catch (err) {
     await client.query('ROLLBACK');
-    console.error('Submit Fehler:', err);
+    console.error('Submit Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   } finally {
     client.release();
@@ -363,16 +446,20 @@ router.post('/:id/submit', requireAuth, async (req, res) => {
 // Löschen
 router.delete('/:id', requireAuth, async (req, res) => {
   try {
+    const berechtigt = ENTWURF_ROLLEN.includes(req.user.rolle);
     const { rows } = await db.query(
-      `DELETE FROM vergaben WHERE id = $1 AND organisation_id = $2 AND status = 'entwurf' RETURNING id`,
-      [req.params.id, req.user.organisation_id]
+      `DELETE FROM vergaben
+       WHERE id = $1 AND organisation_id = $2 AND status = 'entwurf'
+         AND ($3::boolean OR ersteller_id = $4)
+       RETURNING id`,
+      [req.params.id, req.user.organisation_id, berechtigt, req.user.id]
     );
     if (rows.length === 0) {
-      return res.status(400).json({ error: 'Nur Entwürfe können gelöscht werden' });
+      return res.status(400).json({ error: 'Nur eigene Entwürfe können gelöscht werden' });
     }
     res.json({ deleted: true });
   } catch (err) {
-    console.error('Löschen Fehler:', err);
+    console.error('Löschen Fehler:', err.message);
     res.status(500).json({ error: 'Serverfehler' });
   }
 });

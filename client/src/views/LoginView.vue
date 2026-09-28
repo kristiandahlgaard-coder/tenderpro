@@ -69,11 +69,6 @@ async function handleLogin() {
         </button>
       </form>
 
-      <div class="login-hint">
-        <strong>Test-Zugänge:</strong><br>
-        admin@tenderpro.de / test123<br>
-        vergabe@tenderpro.de / test123
-      </div>
     </div>
   </div>
 </template>
