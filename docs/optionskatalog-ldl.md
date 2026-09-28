@@ -1,6 +1,6 @@
 # Optionskatalog Liefer- und Dienstleistungen
 
-**Stand:** 2026-09-26 · **Rechtsstand:** GWB/VgV i.d.F. Vergabebeschleunigungsgesetz (in Kraft seit 01.07.2026, gilt für ab dann eingeleitete Verfahren, § 187 Abs. 2 GWB); UVgO 2017; AV LHO Berlin i.d.F. 18.09.2026
+**Stand:** 2026-09-28 · **Rechtsstand:** GWB/VgV i.d.F. Vergabebeschleunigungsgesetz (in Kraft seit 01.07.2026, gilt für ab dann eingeleitete Verfahren, § 187 Abs. 2 GWB); UVgO 2017; AV LHO Berlin i.d.F. 18.09.2026
 
 **Priorisierung:** 1. Rechtssicherheit, 2. Wirtschaftlichkeit, 3. Aufwand für die Vergabestelle. Ränge: ⭐ Empfohlen · Alternative · ⚠️ Möglich mit Risiko. Je Entscheidungspunkt zeigt die Plattform genau eine Empfehlung; weitere gleichrangige Optionen erscheinen als Alternative.
 
@@ -20,7 +20,7 @@ EU-Schwellenwerte 2026-01-01 bis 2027-12-31: Liefer-/Dienstleistungen 216.000 �
 | Beschränkte Ausschreibung ohne TNW | 200.000 € | – | – |
 | eVergabe-Pflicht auch für Direktaufträge ab | 25.000 € | – | – |
 
-Quellen: Berlin – AV LHO zu § 55, Rundschreiben SenFin vom 18.09.2026 (II B 53 - H 1051 055-1/2023-16-53), ab sofort anzuwenden 🟢; Bund – § 55 Abs. 2 BHO i.d.F. Vergabebeschleunigungsgesetz (BGBl. 2026 I Nr. 137); Verwaltungsvorschriften Bund vom 10.06.2026 (Überblick: https://www.btl-recht.de/blog/vergabebeschleunigungsgesetz-in-kraft-getreten/) 🟡.
+Quellen: Berlin – AV LHO zu § 55, Rundschreiben SenFin vom 18.09.2026 (II B 53 - H 1051 055-1/2023-16-53), ab sofort anzuwenden 🟢; Bund – § 55 Abs. 2 BHO i.d.F. Vergabebeschleunigungsgesetz (BGBl. 2026 I Nr. 137); Abweichende Verwaltungsvorschriften zur Nutzung von Verhandlungsvergaben auf Bundesebene vom 10.06.2026, BAnz AT 18.06.2026 B3; VOB/A § 3a i.d.F. BAnz AT 16.12.2025 B7 🟢.
 
 ## Klärungsfragen, die die Empfehlung verändern
 
@@ -33,6 +33,7 @@ Quellen: Berlin – AV LHO zu § 55, Rundschreiben SenFin vom 18.09.2026 (II B 5
 - **personalintensiv:** Ist die Leistung personalintensiv (z.B. Reinigung, Bewachung, Pflege, Catering)?
 - **it:** Geht es um IT-Leistungen (Hardware, Software, Cloud, IT-Dienstleistungen)?
 - **wiederkehrender_bedarf:** Entsteht der Bedarf wiederkehrend, ohne dass Mengen und Zeitpunkte heute feststehen?
+- **startup_innovation:** Soll ein junges Unternehmen (Start-up) mit einer innovativen Lösung beauftragt werden? (Nur beim Bund relevant.)
 
 ## EP-01 Verfahrensart
 
@@ -57,6 +58,16 @@ Für Digitalisierungs- und Innovationsvorhaben ist in Berlin ein Direktauftrag b
 - **Was dann zu tun ist:** Markterkundung und Preisvergleich aktenkundig machen; Wechselgebot mit Dokumentation von Ausnahmen; statistische Erfassung
 - **Risiken:** Befristet bis 31.12.2028; Einordnung als 'Innovation' muss nachvollziehbar begründet sein
 - **Rechtsgrundlage:** AV LHO Berlin § 55 Nr. 3.3.4
+
+### Direktauftrag an Start-up (nur Bund)
+**Alternative** · 🟢
+
+Der Bund darf junge, innovative Unternehmen bis zu einer höheren Grenze direkt beauftragen als sonst – befristet bis Ende 2035.
+
+- **Voraussetzungen:** Gründung höchstens 4 Jahre zurück; im Vorjahr unter 250 Beschäftigte und Umsatz höchstens 50 Mio. € oder Bilanzsumme höchstens 43 Mio. €; keine Beherrschung zu 25 % oder mehr durch ein Nicht-Start-up; Auftrag betrifft eine innovative Lösung
+- **Was dann zu tun ist:** Start-up-Eigenschaft und Innovationsbezug im Vermerk dokumentieren; ab 50.000 € Veröffentlichung auf oeffentlichevergabe.de mit Hinweis auf die Erleichterung; Wirtschaftlichkeit, Transparenz und Korruptionsprävention beachten
+- **Risiken:** Regelung befristet bis 31.12.2035; Start-up-Eigenschaft und Innovationsbezug müssen im Streitfall belegbar sein
+- **Rechtsgrundlage:** Abweichende VV Bund zu Erleichterungen für Start-ups, BAnz AT 18.06.2026 B4, Ziffer I
 
 ### Verhandlungsverfahren mit TNW (soziale/besondere Dienstleistungen)
 **⭐ Empfohlen** · 🟢
@@ -86,7 +97,7 @@ Sie fordern gezielt mindestens drei Unternehmen zum Angebot auf und dürfen verh
 - **Voraussetzungen:** grundsätzlich mindestens drei geeignete Unternehmen auffordern; Auswahl der Unternehmen sachlich begründen
 - **Was dann zu tun ist:** Wechselgebot mit Dokumentation; ab 25.000 € Veröffentlichung des vergebenen Auftrags (ex-post)
 - **Risiken:** Weniger Wettbewerb – oft höhere Preise; Vorwurf der 'Stammlieferanten' bei fehlender Rotation
-- **Rechtsgrundlage:** § 8 Abs. 4 Nr. 17, § 12 Abs. 2, § 30 UVgO; Berlin: AV LHO § 55 Nr. 3.3.2, 3.6
+- **Rechtsgrundlage:** § 8 Abs. 4 Nr. 17, § 12 Abs. 2, § 30 UVgO; Berlin: AV LHO § 55 Nr. 3.3.2, 3.6; Bund: VV Bund, BAnz AT 18.06.2026 B3, Ziffer I
 
 ### Verhandlungsvergabe mit Teilnahmewettbewerb
 **Alternative** (abweichend: verhandlungsbedarf → Rang 1) · 🟢
@@ -96,7 +107,7 @@ Sie fordern gezielt mindestens drei Unternehmen zum Angebot auf und dürfen verh
 - **Voraussetzungen:** öffentliche Bekanntmachung des Teilnahmewettbewerbs; Auswahlkriterien, Mindest- und ggf. Höchstzahl vorab angeben
 - **Was dann zu tun ist:** Auswahlmatrix mit Bekanntmachung veröffentlichen; Verhandlungen dokumentieren; Zuschlagskriterien nicht verhandeln
 - **Risiken:** Höherer Aufwand als Ausschreibung ohne Verhandlung
-- **Rechtsgrundlage:** § 8 Abs. 4 Nr. 17, §§ 10, 12, 36 UVgO; Berlin: AV LHO § 55 Nr. 3.3.2
+- **Rechtsgrundlage:** § 8 Abs. 4 Nr. 17, §§ 10, 12, 36 UVgO; Berlin: AV LHO § 55 Nr. 3.3.2; Bund: VV Bund, BAnz AT 18.06.2026 B3, Ziffer I (bis zum EU-Schwellenwert)
 
 ### Beschränkte Ausschreibung mit Teilnahmewettbewerb
 **Alternative** · 🟢
@@ -290,9 +301,9 @@ Preis und qualitative Kriterien (z.B. Konzept, Service, Lieferzeit) mit festen G
 Bei Reinigung, Bewachung oder Catering Qualität mitbewerten (z.B. Leistungswerte, Einarbeitung, Qualitätssicherung) und Niedrigpreise genau prüfen.
 
 - **Voraussetzungen:** Kriterien auf die konkrete Ausführung beziehen
-- **Was dann zu tun ist:** Prüfung ungewöhnlich niedriger Angebote, insbesondere Einhaltung von Mindestlohn und Tariftreue (Landesrecht); Einsatz benannten Personals vertraglich absichern, wenn es bewertet wird
+- **Was dann zu tun ist:** Prüfung ungewöhnlich niedriger Angebote, insbesondere Einhaltung von Mindestlohn und Tariftreue (Landesrecht); Einsatz benannten Personals vertraglich absichern, wenn es bewertet wird; Berlin: Tariftreue-Erklärung bei Dienstleistungen schon ab 1.000 € netto, wenn die Leistung mindestens 8 Kalendertage dauert und eine einschlägige Tarifbroschüre existiert (Formular Wirt-214.2 bis 74.999 €, Wirt-214.1 ab 75.000 €); gilt für Verfahren ab 16.07.2026
 - **Risiken:** Reiner Preiswettbewerb fördert nicht auskömmliche Kalkulationen
-- **Rechtsgrundlage:** § 58 Abs. 2 Nr. 2, § 60 VgV; Landestariftreuerecht (Berlin: BerlAVG)
+- **Rechtsgrundlage:** § 58 Abs. 2 Nr. 2, § 60 VgV; Landestariftreuerecht (Berlin: BerlAVG i.d.F. des Zweiten Änderungsgesetzes, GVBl. 2026 Nr. 23 S. 537, in Kraft 16.07.2026)
 
 ### IT: Lebenszykluskosten und digitale Souveränität
 **⭐ Empfohlen** · 🟡
@@ -300,9 +311,9 @@ Bei Reinigung, Bewachung oder Catering Qualität mitbewerten (z.B. Leistungswert
 Bei IT nicht nur den Anschaffungspreis werten, sondern Betriebs-, Lizenz- und Wechselkosten – und seit Juli 2026 auch Aspekte digitaler Souveränität.
 
 - **Voraussetzungen:** Berechnungsmethode der Lebenszykluskosten in den Unterlagen angeben
-- **Was dann zu tun ist:** EVB-IT-Vertragsmuster prüfen; Kriterien zur digitalen Souveränität konkret und messbar formulieren
-- **Risiken:** Unklare Souveränitätskriterien können diskriminierend wirken
-- **Rechtsgrundlage:** § 58 Abs. 2 VgV (seit 01.07.2026), § 59 VgV
+- **Was dann zu tun ist:** EVB-IT-Vertragsmuster prüfen; Kriterien zur digitalen Souveränität konkret und messbar formulieren; Produkt- oder herstellerneutral ausschreiben. Eine Vorgabe eines bestimmten Herstellers (auch bei Folgebeschaffungen für vorhandene Systeme) nur mit konkreter, dokumentierter Begründung inklusive Kosten- und Aufwandsberechnung; Mischbetrieb als Alternative prüfen
+- **Risiken:** Unklare Souveränitätskriterien können diskriminierend wirken; Pauschaler Verweis auf vorhandene Infrastruktur oder befürchtete Inkompatibilität rechtfertigt keine Herstellervorgabe – Verfahren kann zurückversetzt werden
+- **Rechtsgrundlage:** § 58 Abs. 2 VgV (seit 01.07.2026), § 59 VgV; § 31 Abs. 6 VgV; OLG Düsseldorf, 02.09.2026 – VII-Verg 38/25
 
 ### Festpreis, Wettbewerb nur über Qualität
 **Alternative** · 🟢

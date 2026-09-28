@@ -1,7 +1,7 @@
 {
   "katalog": "optionskatalog-ldl",
   "titel": "Optionskatalog Liefer- und Dienstleistungen",
-  "stand": "2026-09-26",
+  "stand": "2026-09-28",
   "rechtsstand": "GWB/VgV i.d.F. Vergabebeschleunigungsgesetz (in Kraft seit 01.07.2026, gilt für ab dann eingeleitete Verfahren, § 187 Abs. 2 GWB); UVgO 2017; AV LHO Berlin i.d.F. 18.09.2026",
   "leistungsarten": [
     "Lieferleistung",
@@ -27,7 +27,8 @@
     "soziale_dl": "Gehört die Leistung zu den sozialen oder anderen besonderen Dienstleistungen (z.B. Gesundheits-, Sozial-, Bildungs-, Rechtsdienstleistungen)?",
     "personalintensiv": "Ist die Leistung personalintensiv (z.B. Reinigung, Bewachung, Pflege, Catering)?",
     "it": "Geht es um IT-Leistungen (Hardware, Software, Cloud, IT-Dienstleistungen)?",
-    "wiederkehrender_bedarf": "Entsteht der Bedarf wiederkehrend, ohne dass Mengen und Zeitpunkte heute feststehen?"
+    "wiederkehrender_bedarf": "Entsteht der Bedarf wiederkehrend, ohne dass Mengen und Zeitpunkte heute feststehen?",
+    "startup_innovation": "Soll ein junges Unternehmen (Start-up) mit einer innovativen Lösung beauftragt werden? (Nur beim Bund relevant.)"
   },
   "entscheidungspunkte": [
     {
@@ -91,6 +92,38 @@
             "Einordnung als 'Innovation' muss nachvollziehbar begründet sein"
           ],
           "rechtsgrundlage": "AV LHO Berlin § 55 Nr. 3.3.4",
+          "sicherheitsgrad": "gruen"
+        },
+        {
+          "id": "EP-01-DA-STARTUP",
+          "titel": "Direktauftrag an Start-up (nur Bund)",
+          "rang": 2,
+          "kurz": "Der Bund darf junge, innovative Unternehmen bis zu einer höheren Grenze direkt beauftragen als sonst – befristet bis Ende 2035.",
+          "wenn": {
+            "regime": [
+              "national"
+            ],
+            "flag": [
+              "startup_innovation"
+            ],
+            "volumen_max_wg": "direktauftrag_startup_innovation"
+          },
+          "voraussetzungen": [
+            "Gründung höchstens 4 Jahre zurück",
+            "im Vorjahr unter 250 Beschäftigte und Umsatz höchstens 50 Mio. € oder Bilanzsumme höchstens 43 Mio. €",
+            "keine Beherrschung zu 25 % oder mehr durch ein Nicht-Start-up",
+            "Auftrag betrifft eine innovative Lösung"
+          ],
+          "pflichten": [
+            "Start-up-Eigenschaft und Innovationsbezug im Vermerk dokumentieren",
+            "ab 50.000 € Veröffentlichung auf oeffentlichevergabe.de mit Hinweis auf die Erleichterung",
+            "Wirtschaftlichkeit, Transparenz und Korruptionsprävention beachten"
+          ],
+          "risiken": [
+            "Regelung befristet bis 31.12.2035",
+            "Start-up-Eigenschaft und Innovationsbezug müssen im Streitfall belegbar sein"
+          ],
+          "rechtsgrundlage": "Abweichende VV Bund zu Erleichterungen für Start-ups, BAnz AT 18.06.2026 B4, Ziffer I",
           "sicherheitsgrad": "gruen"
         },
         {
@@ -168,7 +201,7 @@
             "Weniger Wettbewerb – oft höhere Preise",
             "Vorwurf der 'Stammlieferanten' bei fehlender Rotation"
           ],
-          "rechtsgrundlage": "§ 8 Abs. 4 Nr. 17, § 12 Abs. 2, § 30 UVgO; Berlin: AV LHO § 55 Nr. 3.3.2, 3.6",
+          "rechtsgrundlage": "§ 8 Abs. 4 Nr. 17, § 12 Abs. 2, § 30 UVgO; Berlin: AV LHO § 55 Nr. 3.3.2, 3.6; Bund: VV Bund, BAnz AT 18.06.2026 B3, Ziffer I",
           "sicherheitsgrad": "gruen"
         },
         {
@@ -197,7 +230,7 @@
           "risiken": [
             "Höherer Aufwand als Ausschreibung ohne Verhandlung"
           ],
-          "rechtsgrundlage": "§ 8 Abs. 4 Nr. 17, §§ 10, 12, 36 UVgO; Berlin: AV LHO § 55 Nr. 3.3.2",
+          "rechtsgrundlage": "§ 8 Abs. 4 Nr. 17, §§ 10, 12, 36 UVgO; Berlin: AV LHO § 55 Nr. 3.3.2; Bund: VV Bund, BAnz AT 18.06.2026 B3, Ziffer I (bis zum EU-Schwellenwert)",
           "sicherheitsgrad": "gruen"
         },
         {
@@ -686,12 +719,13 @@
           ],
           "pflichten": [
             "Prüfung ungewöhnlich niedriger Angebote, insbesondere Einhaltung von Mindestlohn und Tariftreue (Landesrecht)",
-            "Einsatz benannten Personals vertraglich absichern, wenn es bewertet wird"
+            "Einsatz benannten Personals vertraglich absichern, wenn es bewertet wird",
+            "Berlin: Tariftreue-Erklärung bei Dienstleistungen schon ab 1.000 € netto, wenn die Leistung mindestens 8 Kalendertage dauert und eine einschlägige Tarifbroschüre existiert (Formular Wirt-214.2 bis 74.999 €, Wirt-214.1 ab 75.000 €); gilt für Verfahren ab 16.07.2026"
           ],
           "risiken": [
             "Reiner Preiswettbewerb fördert nicht auskömmliche Kalkulationen"
           ],
-          "rechtsgrundlage": "§ 58 Abs. 2 Nr. 2, § 60 VgV; Landestariftreuerecht (Berlin: BerlAVG)",
+          "rechtsgrundlage": "§ 58 Abs. 2 Nr. 2, § 60 VgV; Landestariftreuerecht (Berlin: BerlAVG i.d.F. des Zweiten Änderungsgesetzes, GVBl. 2026 Nr. 23 S. 537, in Kraft 16.07.2026)",
           "sicherheitsgrad": "gruen"
         },
         {
@@ -713,12 +747,14 @@
           ],
           "pflichten": [
             "EVB-IT-Vertragsmuster prüfen",
-            "Kriterien zur digitalen Souveränität konkret und messbar formulieren"
+            "Kriterien zur digitalen Souveränität konkret und messbar formulieren",
+            "Produkt- oder herstellerneutral ausschreiben. Eine Vorgabe eines bestimmten Herstellers (auch bei Folgebeschaffungen für vorhandene Systeme) nur mit konkreter, dokumentierter Begründung inklusive Kosten- und Aufwandsberechnung; Mischbetrieb als Alternative prüfen"
           ],
           "risiken": [
-            "Unklare Souveränitätskriterien können diskriminierend wirken"
+            "Unklare Souveränitätskriterien können diskriminierend wirken",
+            "Pauschaler Verweis auf vorhandene Infrastruktur oder befürchtete Inkompatibilität rechtfertigt keine Herstellervorgabe – Verfahren kann zurückversetzt werden"
           ],
-          "rechtsgrundlage": "§ 58 Abs. 2 VgV (seit 01.07.2026), § 59 VgV",
+          "rechtsgrundlage": "§ 58 Abs. 2 VgV (seit 01.07.2026), § 59 VgV; § 31 Abs. 6 VgV; OLG Düsseldorf, 02.09.2026 – VII-Verg 38/25",
           "sicherheitsgrad": "gelb"
         },
         {
