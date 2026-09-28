@@ -14,8 +14,12 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 CREATE TABLE IF NOT EXISTS organisationen (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name VARCHAR(255) NOT NULL,
+  -- 'oberste_bundesbehoerde': fuer die EU-Schwelle nach Art. 4 RL 2014/24/EU relevant
+  -- (140.000 EUR statt 216.000 EUR bei Liefer-/Dienstleistungen), siehe optionskatalog.js.
+  -- Es gibt noch keine Verwaltungsoberflaeche, um diesen Wert zu setzen (gilt auch fuer
+  -- 'sektoren'/'konzession') - bis dahin nur direkt in der Datenbank aenderbar.
   typ VARCHAR(50) NOT NULL DEFAULT 'klassisch'
-    CHECK (typ IN ('klassisch', 'sektoren', 'konzession')),
+    CHECK (typ IN ('klassisch', 'sektoren', 'konzession', 'oberste_bundesbehoerde')),
   strasse VARCHAR(255),
   plz VARCHAR(10),
   ort VARCHAR(100),
@@ -417,3 +421,13 @@ CREATE TRIGGER trg_organisationen_updated BEFORE UPDATE ON organisationen
 DROP TRIGGER IF EXISTS trg_unternehmen_updated ON unternehmen;
 CREATE TRIGGER trg_unternehmen_updated BEFORE UPDATE ON unternehmen
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
+-- ───────────────────────────────────────────────────
+-- Nachtraegliche Constraint-Erweiterungen (idempotent, fuer bereits
+-- bestehende Datenbanken – bei CREATE TABLE IF NOT EXISTS greift eine
+-- geaenderte CHECK-Klausel oben sonst nicht rueckwirkend).
+-- ───────────────────────────────────────────────────
+
+ALTER TABLE organisationen DROP CONSTRAINT IF EXISTS organisationen_typ_check;
+ALTER TABLE organisationen ADD CONSTRAINT organisationen_typ_check
+  CHECK (typ IN ('klassisch', 'sektoren', 'konzession', 'oberste_bundesbehoerde'));
