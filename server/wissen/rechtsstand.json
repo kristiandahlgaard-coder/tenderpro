@@ -40,7 +40,7 @@
       "stand": "2026-07-01",
       "quelle": "§ 55 Abs. 2 BHO i.d.F. Vergabebeschleunigungsgesetz (BGBl. 2026 I Nr. 137); Abweichende Verwaltungsvorschriften zur Nutzung von Verhandlungsvergaben auf Bundesebene vom 10.06.2026, BAnz AT 18.06.2026 B3; VOB/A § 3a i.d.F. BAnz AT 16.12.2025 B7",
       "sicherheitsgrad": "gruen",
-      "hinweis": "Die Verwaltungsvorschrift zur Verhandlungsvergabe gilt seit 01.07.2026 und tritt außer Kraft, sobald eine neue UVgO-Fassung bekannt gemacht wird. Ressorts setzen keine eigenen abweichenden Wertgrenzen mehr fest. Die Verhandlungsvergabe mit Teilnahmewettbewerb ist ohne Voraussetzungen bis zum EU-Schwellenwert zulässig (§ 106 GWB) – das bildet diese Datei wegen der Sonderschwelle für oberste Bundesbehörden noch nicht als feste Zahl ab, siehe fundstellen.vv_mit_tnw_ld.",
+      "hinweis": "Die Verwaltungsvorschrift zur Verhandlungsvergabe gilt seit 01.07.2026 und tritt außer Kraft, sobald eine neue UVgO-Fassung bekannt gemacht wird. Ressorts setzen keine eigenen abweichenden Wertgrenzen mehr fest. Die Verhandlungsvergabe mit Teilnahmewettbewerb ist ohne Voraussetzungen bis zum EU-Schwellenwert zulässig (§ 106 GWB); der Wert \"EU_SCHWELLE\" wird von optionskatalog.js anhand des Organisationstyps aufgelöst (oberste Bundesbehörde: 140.000 €, sonst 216.000 €).",
       "wertgrenzen": {
         "direktauftrag_ld": 50000,
         "direktauftrag_freiberuflich": 50000,
@@ -49,7 +49,8 @@
         "direktauftrag_startup_innovation_befristet_bis": "2035-12-31",
         "ba_ohne_tnw_ld": null,
         "vv_ohne_tnw_ld": 100000,
-        "vv_mit_tnw_ld": null,
+        "vv_mit_tnw_ld": "EU_SCHWELLE",
+        "vv_ohne_tnw_startup_innovation": "EU_SCHWELLE",
         "direktauftrag_bau": 50000,
         "ba_ohne_tnw_bau": 150000,
         "freihaendig_bau": 100000,
@@ -57,7 +58,8 @@
       },
       "fundstellen": {
         "vv_ohne_tnw_ld": "VV Bund, BAnz AT 18.06.2026 B3, Ziffer I (Abweichung von § 8 Abs. 4 UVgO)",
-        "vv_mit_tnw_ld": "VV Bund, BAnz AT 18.06.2026 B3, Ziffer I – zulässig bis zum EU-Schwellenwert (§ 106 GWB); in dieser Datei noch nicht als feste Zahl abgebildet",
+        "vv_mit_tnw_ld": "VV Bund, BAnz AT 18.06.2026 B3, Ziffer I – zulässig bis zum EU-Schwellenwert (§ 106 GWB, oberste Bundesbehörden: 140.000 €, sonst 216.000 €)",
+        "vv_ohne_tnw_startup_innovation": "Abweichende VV Bund zu Erleichterungen für Start-ups, BAnz AT 18.06.2026 B4, Ziffer II – zulässig bis zum EU-Schwellenwert (Gründung höchstens 8 Jahre, sonst gleiche Größenkriterien wie beim Direktauftrag, Innovationsbezug; ab 50.000 € Veröffentlichung auf oeffentlichevergabe.de)",
         "direktauftrag_ld": "§ 55 Abs. 2 BHO",
         "direktauftrag_startup_innovation": "Abweichende VV Bund zu Erleichterungen für Start-ups, BAnz AT 18.06.2026 B4, Ziffer I (Gründung höchstens 4 Jahre, im Vorjahr unter 250 Beschäftigte und Umsatz höchstens 50 Mio. € oder Bilanzsumme höchstens 43 Mio. €, keine Beherrschung zu 25 % oder mehr durch Nicht-Start-ups, Innovationsbezug; ab 50.000 € Veröffentlichung auf oeffentlichevergabe.de; befristet bis 31.12.2035)",
         "freihaendig_bau": "§ 3a VOB/A i.d.F. BAnz AT 16.12.2025 B7",

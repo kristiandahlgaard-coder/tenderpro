@@ -39,6 +39,9 @@ function euSchwelle(leistungsart, merkmale, orgTyp) {
   if (leistungsart === 'Konzession') return w.konzession;
   if (merkmale.soziale_dl) return orgTyp === 'sektoren' ? w.soziale_besondere_dl_sektoren : w.soziale_besondere_dl;
   if (orgTyp === 'sektoren') return w.liefer_dienst_sektoren;
+  // Oberste Bundesbehörden haben für Liefer-/Dienstleistungen eine niedrigere EU-Schwelle
+  // (Art. 4 RL 2014/24/EU; Delegierte VO (EU) 2025/2152) als sonstige öffentliche Auftraggeber.
+  if (orgTyp === 'oberste_bundesbehoerde') return w.liefer_dienst_oberste_bundesbehoerden;
   return w.liefer_dienst;
 }
 
@@ -55,11 +58,15 @@ function matches(wenn = {}, ctx) {
 
   const wg = ctx.wertgrenzen;
   if (wenn.volumen_max_wg) {
-    const grenze = wg[wenn.volumen_max_wg];
+    // "EU_SCHWELLE" verweist statt auf eine feste Zahl auf den für diesen Auftrag geltenden
+    // EU-Schwellenwert (z.B. Bund: Verhandlungsvergabe mit TNW bis § 106 GWB) – wichtig, weil
+    // für oberste Bundesbehörden 140.000 € statt 216.000 € gelten (siehe euSchwelle()).
+    const grenze = wg[wenn.volumen_max_wg] === 'EU_SCHWELLE' ? ctx.euSchwelle : wg[wenn.volumen_max_wg];
     if (grenze == null || ctx.volumen == null || ctx.volumen > grenze) return false;
   }
   if (wenn.volumen_min_wg) {
-    const grenze = wg[wenn.volumen_min_wg];
+    const roh = wg[wenn.volumen_min_wg];
+    const grenze = roh === 'EU_SCHWELLE' ? ctx.euSchwelle : roh;
     // Fehlt die Untergrenze (z.B. kein Direktauftrag definiert), gilt die Option ab 0 €.
     if (grenze != null && ctx.volumen != null && ctx.volumen <= grenze) return false;
   }
@@ -92,7 +99,7 @@ function formatWert(v) {
  * @param {string} input.leistungsart
  * @param {number} input.volumen      netto EUR
  * @param {string} [input.bundesland]
- * @param {string} [input.orgTyp]     klassisch | sektoren | konzession
+ * @param {string} [input.orgTyp]     klassisch | sektoren | konzession | oberste_bundesbehoerde
  * @param {object} [input.merkmale]   { standardisiert: true|false, ... }
  */
 function ermittleOptionen({ leistungsart, volumen, bundesland, orgTyp, merkmale = {} }) {
@@ -125,7 +132,7 @@ function ermittleOptionen({ leistungsart, volumen, bundesland, orgTyp, merkmale 
     };
   }
 
-  const ctx = { regime, leistungsart, volumen: vol, merkmale, wertgrenzen: pack.wertgrenzen };
+  const ctx = { regime, leistungsart, volumen: vol, merkmale, wertgrenzen: pack.wertgrenzen, euSchwelle: schwelle };
 
   const entscheidungspunkte = katalog.entscheidungspunkte.map(ep => {
     const optionen = ep.optionen
@@ -172,7 +179,10 @@ function ermittleOptionen({ leistungsart, volumen, bundesland, orgTyp, merkmale 
     landesPack: {
       key: packKey, name: pack.name, stand: pack.stand, quelle: pack.quelle,
       sicherheitsgrad: pack.sicherheitsgrad,
-      wertgrenzen: Object.fromEntries(Object.entries(pack.wertgrenzen).map(([k, v]) => [k, typeof v === 'number' ? formatWert(v) : v])),
+      wertgrenzen: Object.fromEntries(Object.entries(pack.wertgrenzen).map(([k, v]) => [
+        k,
+        typeof v === 'number' ? formatWert(v) : v === 'EU_SCHWELLE' ? `${formatWert(schwelle)} (EU-Schwellenwert)` : v,
+      ])),
     },
     katalogVerfuegbar: true,
     empfohlenesVerfahren: empfohlen ? { id: empfohlen.id, titel: empfohlen.titel, kurz: empfohlen.kurz } : null,

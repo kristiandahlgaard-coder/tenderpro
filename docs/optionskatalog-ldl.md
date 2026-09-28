@@ -13,10 +13,12 @@ EU-Schwellenwerte 2026-01-01 bis 2027-12-31: Liefer-/Dienstleistungen 216.000 �
 | Wertgrenze (netto) | Berlin | Bund | ohne Landesregel |
 |---|---|---|---|
 | Direktauftrag L/DL | 75.000 € | 50.000 € | 1.000 € |
-| Direktauftrag Digitalisierung/Innovation | 180.000 € | – | – |
+| Direktauftrag Digitalisierung/Innovation (Berlin) | 180.000 € | – | – |
+| Direktauftrag Start-up (nur Bund, befristet bis 31.12.2035) | – | 100.000 € | – |
 | Direktauftrag freiberuflich | 75.000 € | 50.000 € | – |
 | Verhandlungsvergabe ohne TNW | 200.000 € | 100.000 € | – |
-| Verhandlungsvergabe mit TNW | 200.000 € | – | – |
+| Verhandlungsvergabe mit TNW | 200.000 € | EU-Schwellenwert (§ 106 GWB) | – |
+| Verhandlungsvergabe ohne TNW mit Start-up (nur Bund, befristet bis 31.12.2035) | – | EU-Schwellenwert (§ 106 GWB) | – |
 | Beschränkte Ausschreibung ohne TNW | 200.000 € | – | – |
 | eVergabe-Pflicht auch für Direktaufträge ab | 25.000 € | – | – |
 
@@ -68,6 +70,16 @@ Der Bund darf junge, innovative Unternehmen bis zu einer höheren Grenze direkt 
 - **Was dann zu tun ist:** Start-up-Eigenschaft und Innovationsbezug im Vermerk dokumentieren; ab 50.000 € Veröffentlichung auf oeffentlichevergabe.de mit Hinweis auf die Erleichterung; Wirtschaftlichkeit, Transparenz und Korruptionsprävention beachten
 - **Risiken:** Regelung befristet bis 31.12.2035; Start-up-Eigenschaft und Innovationsbezug müssen im Streitfall belegbar sein
 - **Rechtsgrundlage:** Abweichende VV Bund zu Erleichterungen für Start-ups, BAnz AT 18.06.2026 B4, Ziffer I
+
+### Verhandlungsvergabe ohne TNW mit Start-up (nur Bund)
+**Alternative** · 🟢
+
+Der Bund darf ein junges, innovatives Unternehmen ohne Teilnahmewettbewerb bis zum EU-Schwellenwert beauftragen und dabei verhandeln – befristet bis Ende 2035.
+
+- **Voraussetzungen:** Gründung höchstens 8 Jahre zurück; im Vorjahr unter 250 Beschäftigte und Umsatz höchstens 50 Mio. € oder Bilanzsumme höchstens 43 Mio. €; keine Beherrschung zu 25 % oder mehr durch ein Nicht-Start-up; Auftrag betrifft eine innovative Lösung
+- **Was dann zu tun ist:** Start-up-Eigenschaft und Innovationsbezug im Vermerk dokumentieren; ab 50.000 € Veröffentlichung auf oeffentlichevergabe.de mit Hinweis auf die Erleichterung; Wechselgebot mit Dokumentation von Ausnahmen
+- **Risiken:** Regelung befristet bis 31.12.2035; Weniger Wettbewerb als beim Teilnahmewettbewerb – Start-up-Eigenschaft und Innovationsbezug müssen im Streitfall belegbar sein
+- **Rechtsgrundlage:** Abweichende VV Bund zu Erleichterungen für Start-ups, BAnz AT 18.06.2026 B4, Ziffer II
 
 ### Verhandlungsverfahren mit TNW (soziale/besondere Dienstleistungen)
 **⭐ Empfohlen** · 🟢

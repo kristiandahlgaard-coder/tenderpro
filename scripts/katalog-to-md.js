@@ -14,7 +14,11 @@ fs.mkdirSync(out, { recursive: true });
 
 const rechtsstand = JSON.parse(fs.readFileSync(path.join(WISSEN, 'rechtsstand.json'), 'utf8'));
 const grad = { gruen: '🟢', gelb: '🟡', rot: '🔴' };
-const eur = v => (v == null ? '–' : `${Number(v).toLocaleString('de-DE')} €`);
+const eur = v => {
+  if (v == null) return '–';
+  if (v === 'EU_SCHWELLE') return 'EU-Schwellenwert (§ 106 GWB)';
+  return `${Number(v).toLocaleString('de-DE')} €`;
+};
 
 for (const file of fs.readdirSync(WISSEN).filter(f => f.startsWith('optionskatalog-') && f.endsWith('.json'))) {
   const k = JSON.parse(fs.readFileSync(path.join(WISSEN, file), 'utf8'));
@@ -30,10 +34,12 @@ for (const file of fs.readdirSync(WISSEN).filter(f => f.startsWith('optionskatal
   L.push('| Wertgrenze (netto) | Berlin | Bund | ohne Landesregel |', '|---|---|---|---|');
   const labels = {
     direktauftrag_ld: 'Direktauftrag L/DL',
-    direktauftrag_digital_innovation: 'Direktauftrag Digitalisierung/Innovation',
+    direktauftrag_digital_innovation: 'Direktauftrag Digitalisierung/Innovation (Berlin)',
+    direktauftrag_startup_innovation: 'Direktauftrag Start-up (nur Bund, befristet bis 31.12.2035)',
     direktauftrag_freiberuflich: 'Direktauftrag freiberuflich',
     vv_ohne_tnw_ld: 'Verhandlungsvergabe ohne TNW',
     vv_mit_tnw_ld: 'Verhandlungsvergabe mit TNW',
+    vv_ohne_tnw_startup_innovation: 'Verhandlungsvergabe ohne TNW mit Start-up (nur Bund, befristet bis 31.12.2035)',
     ba_ohne_tnw_ld: 'Beschränkte Ausschreibung ohne TNW',
     evergabe_direktauftrag_ab: 'eVergabe-Pflicht auch für Direktaufträge ab',
   };
