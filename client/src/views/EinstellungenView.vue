@@ -33,7 +33,7 @@ const typBeschreibung = {
   klassisch: 'Öffentlicher Auftraggeber im Sinne des § 99 Nr. 1–3 GWB ohne Besonderheiten (Regelfall).',
   sektoren: 'Auftraggeber im Bereich Wasser, Energie, Verkehr oder Postdienste (§ 100 GWB) – eigene, meist höhere EU-Schwellenwerte.',
   konzession: 'Vergibt schwerpunktmäßig Bau- oder Dienstleistungskonzessionen (§ 105 GWB, KonzVgV).',
-  oberste_bundesbehoerde: 'Oberste Bundesbehörde bzw. zentrale Beschaffungsstelle des Bundes (Anlage 1 zu § 106 Abs. 2 GWB) – niedrigerer EU-Schwellenwert bei Liefer-/Dienstleistungen (Art. 4 RL 2014/24/EU).',
+  oberste_bundesbehoerde: 'Oberste Bundesbehörde des Bundes (z. B. Bundesministerium) im Sinne von Anhang I der Richtlinie 2014/24/EU – niedrigerer EU-Schwellenwert bei Liefer-/Dienstleistungen (140.000 statt 216.000 €). Hinweis: Der genaue Anwendungsbereich nach § 106 Abs. 2 GWB in der seit 01.07.2026 geltenden Fassung ist noch nicht abschließend anhand der Primärquelle geprüft (🟡) – im Zweifel bitte intern oder rechtlich abklären.',
 }
 
 async function laden_() {
