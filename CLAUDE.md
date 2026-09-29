@@ -31,4 +31,9 @@ Ablauf für Rechtsänderungen – immer auf einem eigenen Branch, nie direkt auf
 3. **joey** – macht Nutzer-Texte verständlich, ohne rechtliche Inhalte zu ändern
 4. **ross** – prüft alles unabhängig gegen die Quellen; nur bei „FREIGEGEBEN" wird der Pull Request zum Zusammenführen empfohlen
 
+Prüfung von Code-Änderungen vor dem Pull Request (unabhängig, ändern selbst nichts):
+- **phoebe** – Technik und Deploy: Build, Serverstart, Migration zweimal hintereinander, Seed, Spaltenlängen
+- **gunther** – Sicherheit und Datenschutz: Geheimnisse, offene Endpunkte, Mandantentrennung, Rollen, KI-Datenflüsse
+- **rachel** – Nutzerführung und Barrierefreiheit (BITV 2.0 / WCAG 2.1 AA), iPad-Tauglichkeit
+
 Zusammengeführt wird ausschließlich durch Kristian per Pull Request.
