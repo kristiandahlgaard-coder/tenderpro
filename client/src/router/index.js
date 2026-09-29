@@ -43,6 +43,11 @@ const routes = [
     component: () => import('../views/FristenrechnerView.vue'),
   },
   {
+    path: '/einstellungen',
+    name: 'einstellungen',
+    component: () => import('../views/EinstellungenView.vue'),
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/',
   },

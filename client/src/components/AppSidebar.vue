@@ -8,13 +8,19 @@ const router = useRouter()
 const auth = useAuthStore()
 const mobileOpen = ref(false)
 
-const navItems = [
-  { label: 'Dashboard', icon: '◫', route: '/' },
-  { label: 'Vergaben', icon: '☰', route: '/vergaben' },
-  { label: 'Vergabe-Advisor', icon: '✦', route: '/advisor', accent: true },
-  { label: 'Freigaben', icon: '✓', route: '/freigaben' },
-  { label: 'Fristenrechner', icon: '⏱', route: '/fristenrechner' },
-]
+const navItems = computed(() => {
+  const items = [
+    { label: 'Dashboard', icon: '◫', route: '/' },
+    { label: 'Vergaben', icon: '☰', route: '/vergaben' },
+    { label: 'Vergabe-Advisor', icon: '✦', route: '/advisor', accent: true },
+    { label: 'Freigaben', icon: '✓', route: '/freigaben' },
+    { label: 'Fristenrechner', icon: '⏱', route: '/fristenrechner' },
+  ]
+  if (auth.user?.rolle === 'admin') {
+    items.push({ label: 'Einstellungen', icon: '⚙', route: '/einstellungen' })
+  }
+  return items
+})
 
 function isActive(path) {
   if (path === '/') return route.path === '/'

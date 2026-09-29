@@ -28,6 +28,7 @@ app.use('/api/vergaben', require('./routes/vergaben'));
 app.use('/api/freigaben', require('./routes/freigaben'));
 app.use('/api/ai', require('./routes/ai'));
 app.use('/api/optionen', require('./routes/optionen'));
+app.use('/api/organisation', require('./routes/organisation'));
 app.use('/api', require('./routes/stammdaten'));
 
 // Health Check
